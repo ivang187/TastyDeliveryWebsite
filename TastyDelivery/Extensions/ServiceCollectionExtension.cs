@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data;
+using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 using Repository = TastyDelivery.Core.Services.Common.Repository;
 
 namespace TastyDelivery.Core.Services.Extensions
@@ -16,8 +17,6 @@ namespace TastyDelivery.Core.Services.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddRazorPages();
-
             return services;
         }
 
@@ -35,7 +34,7 @@ namespace TastyDelivery.Core.Services.Extensions
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = false;
