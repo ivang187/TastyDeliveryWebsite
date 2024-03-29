@@ -12,8 +12,8 @@ using TastyDelivery.Infrastructure.Data;
 namespace TastyDelivery.Infrastructure.Migrations
 {
     [DbContext(typeof(TastyDeliveryDbContext))]
-    [Migration("20240328131059_CreatedCustomUserColumns")]
-    partial class CreatedCustomUserColumns
+    [Migration("20240328150616_UpdateIdentityUserInfo")]
+    partial class UpdateIdentityUserInfo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,11 +169,6 @@ namespace TastyDelivery.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

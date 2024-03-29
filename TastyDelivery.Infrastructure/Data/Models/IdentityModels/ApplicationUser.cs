@@ -21,10 +21,5 @@ namespace TastyDelivery.Infrastructure.Data.Models.IdentityModels
         [MinLength(UsersConstants.UserLastNameMinLength)]
         public string LastName { get; set; } = string.Empty;
 
-        [Required]
-        [MaxLength(UsersConstants.AddressMaxLength)]
-        [MinLength(UsersConstants.AddressMinLength)]
-        public string Address { get; set; } = string.Empty;
-
     }
 }

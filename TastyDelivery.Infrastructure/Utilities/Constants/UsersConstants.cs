@@ -17,8 +17,5 @@ namespace TastyDelivery.Infrastructure.Utilities.Constants
 
         public const int CityNameMaxLength = 30;
         public const int CityNameMinLength = 1;
-
-        public const int AddressMaxLength = 50;
-        public const int AddressMinLength = 1;
     }
 }

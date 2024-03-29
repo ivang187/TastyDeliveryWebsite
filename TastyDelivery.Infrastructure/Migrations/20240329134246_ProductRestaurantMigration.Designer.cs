@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TastyDelivery.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TastyDelivery.Infrastructure.Data;
 namespace TastyDelivery.Infrastructure.Migrations
 {
     [DbContext(typeof(TastyDeliveryDbContext))]
-    partial class TastyDeliveryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240329134246_ProductRestaurantMigration")]
+    partial class ProductRestaurantMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,9 +245,6 @@ namespace TastyDelivery.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -258,99 +258,6 @@ namespace TastyDelivery.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Category = 0,
-                            Description = "Crispy Chicken Fillet, Tomato, Iceberg Lettuce, Mayonnaise, Burger Bun, Fries",
-                            Name = "Chicken Burger"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Category = 0,
-                            Description = "Beef Patty, Pickles, Caramelized Onion, Sauce, Burger Bun, Fries",
-                            Name = "Beef Burger"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Category = 0,
-                            Description = "300g",
-                            Name = "Pork Schnitzel with Fries"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Category = 1,
-                            Description = "Fresh Tomatoes, Cucumber, Bell Peppers, Feta Cheese, Olives",
-                            Name = "Shopska Salad"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Category = 3,
-                            Description = "300ml",
-                            Name = "Chicken Soup"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Category = 2,
-                            Description = "120g",
-                            Name = "Cheesecake"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Category = 3,
-                            Description = "300ml",
-                            Name = "Shkembe Chorba"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Category = 0,
-                            Description = "Pasta, Pancetta, Parmesan",
-                            Name = "Pasta Carbonara"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Category = 2,
-                            Description = "100g",
-                            Name = "Chocolate Cake"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Category = 1,
-                            Description = "Romaine Lettuce, Parmesan Cheese, Croutons, Dressing",
-                            Name = "Caesar Salad"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Category = 0,
-                            Description = "200g",
-                            Name = "Grilled Trout"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Category = 0,
-                            Description = "100g",
-                            Name = "Meatball"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Category = 0,
-                            Description = "150g",
-                            Name = "Chicken bites with Cornflakes"
-                        });
                 });
 
             modelBuilder.Entity("TastyDelivery.Infrastructure.Data.Models.ProductsRestaurants", b =>
@@ -361,184 +268,14 @@ namespace TastyDelivery.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("RestaurantId", "ProductId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductsRestaurants");
-
-                    b.HasData(
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 1,
-                            Price = 10.5
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 1,
-                            Price = 9.6999999999999993
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 2,
-                            Price = 11.9
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 2,
-                            Price = 10.5
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 3,
-                            Price = 15.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 3,
-                            Price = 15.6
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 3,
-                            Price = 15.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 4,
-                            Price = 9.0999999999999996
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 4,
-                            Price = 8.0
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 5,
-                            Price = 4.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 5,
-                            Price = 4.7000000000000002
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 5,
-                            Price = 4.5
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 6,
-                            Price = 4.9000000000000004
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 7,
-                            Price = 6.2000000000000002
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 7,
-                            Price = 5.0
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 8,
-                            Price = 9.5
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 8,
-                            Price = 9.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 9,
-                            Price = 7.9000000000000004
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 10,
-                            Price = 11.9
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 10,
-                            Price = 12.4
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 10,
-                            Price = 10.800000000000001
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 11,
-                            Price = 14.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 11,
-                            Price = 14.9
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 11,
-                            Price = 11.800000000000001
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 12,
-                            Price = 3.2999999999999998
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 12,
-                            Price = 2.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 13,
-                            Price = 10.800000000000001
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 13,
-                            Price = 8.8000000000000007
-                        });
                 });
 
             modelBuilder.Entity("TastyDelivery.Infrastructure.Data.Models.Restaurant", b =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TastyDelivery.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TastyDelivery.Infrastructure.Data;
 namespace TastyDelivery.Infrastructure.Migrations
 {
     [DbContext(typeof(TastyDeliveryDbContext))]
-    partial class TastyDeliveryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240329153422_SeedProductMigration")]
+    partial class SeedProductMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,184 +364,14 @@ namespace TastyDelivery.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("RestaurantId", "ProductId");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductsRestaurants");
-
-                    b.HasData(
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 1,
-                            Price = 10.5
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 1,
-                            Price = 9.6999999999999993
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 2,
-                            Price = 11.9
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 2,
-                            Price = 10.5
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 3,
-                            Price = 15.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 3,
-                            Price = 15.6
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 3,
-                            Price = 15.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 4,
-                            Price = 9.0999999999999996
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 4,
-                            Price = 8.0
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 5,
-                            Price = 4.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 5,
-                            Price = 4.7000000000000002
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 5,
-                            Price = 4.5
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 6,
-                            Price = 4.9000000000000004
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 7,
-                            Price = 6.2000000000000002
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 7,
-                            Price = 5.0
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 8,
-                            Price = 9.5
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 8,
-                            Price = 9.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 9,
-                            Price = 7.9000000000000004
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 10,
-                            Price = 11.9
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 10,
-                            Price = 12.4
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 10,
-                            Price = 10.800000000000001
-                        },
-                        new
-                        {
-                            RestaurantId = 1,
-                            ProductId = 11,
-                            Price = 14.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 11,
-                            Price = 14.9
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 11,
-                            Price = 11.800000000000001
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 12,
-                            Price = 3.2999999999999998
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 12,
-                            Price = 2.5
-                        },
-                        new
-                        {
-                            RestaurantId = 2,
-                            ProductId = 13,
-                            Price = 10.800000000000001
-                        },
-                        new
-                        {
-                            RestaurantId = 3,
-                            ProductId = 13,
-                            Price = 8.8000000000000007
-                        });
                 });
 
             modelBuilder.Entity("TastyDelivery.Infrastructure.Data.Models.Restaurant", b =>
