@@ -33,8 +33,7 @@ namespace TastyDelivery.Extensions
             }).GetAwaiter()
             .GetResult();
             
-            return app;
-                
+            return app;              
         }
     
     }
