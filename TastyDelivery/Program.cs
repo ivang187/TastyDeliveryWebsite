@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TastyDelivery.Core.Services.Extensions;
+using TastyDelivery.Extensions;
 using TastyDelivery.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,4 +32,6 @@ app.UseAuthorization();
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
-app.Run();
+app.SeedAdmin();
+
+await app.RunAsync();
