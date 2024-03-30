@@ -1,0 +1,31 @@
+﻿@using TastyDelivery.Core.Models.Restaurant
+
+@model IEnumerable<RestaurantMenuViewModel>
+
+@{
+    ViewBag.Title = $"Menu";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+<div class="container" style="text-align: center">
+    <div class="card row-md-4" style="text-align: left">
+        @foreach (var menuItem in Model)
+        {
+            <div style="list-style: none">
+                <li>@menuItem.Name - @menuItem.Price BGN <input type="number" name="quantity[@menuItem.Quantity]" value="1" min="1" max="20" style="width: 6ch" /> </li>
+                <li>@menuItem.Description</li>
+                <button onclick="addToOrder(@menuItem.Id, @menuItem.Price)">Add To Order</button>
+            </div>
+        }
+    </div>
+</div>
+
+
+<script>
+    function addToOrder(itemId, itemPrice) {
+        var quantity = document.getElementById('quantity_' + itemId).value;
+        var url = '@Url.Action("Add", "ShoppingCart")' + '?id=' + itemId + '&price=' + itemPrice + '&quantity=' + quantity;
+        location.href = url;
+    }
+</script>
