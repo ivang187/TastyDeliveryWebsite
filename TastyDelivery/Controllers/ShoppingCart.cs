@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NuGet.Protocol;
+using System.Security.Claims;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.ShoppingCart;
-using TastyDelivery.Infrastructure.Data.Models;
+using TastyDelivery.Core.Services;
 
 namespace TastyDelivery.Controllers
 {
@@ -20,14 +19,14 @@ namespace TastyDelivery.Controllers
 
         public IActionResult GetShoppingCart()
         {
-            if (this.HttpContext.Session.GetString("Cart") == null)
+            if (this.HttpContext.Session.GetString(GetUserSession()) == null)
             {
                 var cart = new Cart();
                 var cartJson = JsonConvert.SerializeObject(cart);
-                this.HttpContext.Session.SetString("Cart", cartJson);
+                this.HttpContext.Session.SetString(GetUserSession() , cartJson);
             }
 
-            var cartData = this.HttpContext.Session.GetString("Cart");
+            var cartData = this.HttpContext.Session.GetString(GetUserSession());
             var cartToPass = JsonConvert.DeserializeObject<Cart>(cartData);
 
             return View(cartToPass);
@@ -38,14 +37,32 @@ namespace TastyDelivery.Controllers
         {
             var model = await shoppingCartService.AddToCart(productId, price, quantity);
 
-            var cartJson = this.HttpContext.Session.GetString("Cart");
+            var cartJson = this.HttpContext.Session.GetString(GetUserSession());
             Cart cart = cartJson != null ? JsonConvert.DeserializeObject<Cart>(cartJson) : new Cart();
 
-            cart.Products.Add(model);
+            var existingItem = cart.Products.FirstOrDefault(item => item.Id == model.Id);
 
-            this.HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+            if (existingItem != null)
+            {
+                existingItem.Quantity += quantity;
+            }
+            else
+            {
+                cart.Products.Add(model);
+            }
+
+            this.HttpContext.Session.SetString(GetUserSession(), JsonConvert.SerializeObject(cart));
 
             return RedirectToAction("ShowMenu", "Restaurant" , new { id = restaurantId });
+        }
+
+        private string GetUserSession()
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            string sessionKey = $"Cart_{userId}";
+
+            return sessionKey;
         }
     }
 }

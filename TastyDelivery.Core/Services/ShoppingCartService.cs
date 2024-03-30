@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Security.Claims;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.ShoppingCart;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
+using TastyDelivery.Infrastructure.Migrations;
 
 namespace TastyDelivery.Core.Services
 {
@@ -25,7 +21,7 @@ namespace TastyDelivery.Core.Services
 
         public async Task<CartItemViewModel> AddToCart(int id, double price, int quantity)
         {
-            var product = await _repository.AllReadOnly<Product>()
+            return await _repository.AllReadOnly<Product>()
                 .Where(p => p.Id == id)
                 .Select(p => new CartItemViewModel
                 {
@@ -35,8 +31,6 @@ namespace TastyDelivery.Core.Services
                     Quantity = quantity
                 })
                 .FirstOrDefaultAsync();
-
-            return product;
         }
     }
 }

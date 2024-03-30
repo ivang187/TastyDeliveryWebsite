@@ -10,8 +10,8 @@
         <thead>
             <tr>
                 <th>Product</th>
-                <th>Price</th>
                 <th>Quantity</th>
+                <th>Price</th>
                 <th>Total</th>
             </tr>
         </thead>
@@ -20,14 +20,14 @@
             {
                 <tr>
                     <td>@item.Name</td>
-                    <td>@item.Price</td>
                     <td>@item.Quantity</td>
-                    <td>@(item.Price * item.Quantity)</td>
+                    <td>@item.Price BGN</td>
+                    <td>@(item.Price * item.Quantity) BGN</td>
                 </tr>
             }
         </tbody>
     </table>
-    <div>Total Price: @Model.Products.Sum(item => item.Price * item.Quantity)</div>
+    <div>Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN</div>
 }
 else
 {

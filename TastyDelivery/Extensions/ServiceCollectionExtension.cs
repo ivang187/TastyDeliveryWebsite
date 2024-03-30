@@ -21,7 +21,7 @@ namespace TastyDelivery.Core.Services.Extensions
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
                 options.Cookie.HttpOnly = true;
             });
             services.AddScoped<IRestaurantService, RestaurantService>();
