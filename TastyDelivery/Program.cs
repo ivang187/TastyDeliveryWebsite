@@ -33,5 +33,6 @@ app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
 app.SeedAdmin();
+app.UseSession();
 
 await app.RunAsync();

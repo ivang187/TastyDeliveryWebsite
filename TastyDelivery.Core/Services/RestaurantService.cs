@@ -41,7 +41,8 @@ namespace TastyDelivery.Core.Services
                 .Where(r => r.RestaurantId == id)
                 .Select(pr => new RestaurantMenuViewModel
                 {
-                    Id = pr.ProductId,
+                    RestaurantId = pr.RestaurantId,
+                    ProductId = pr.ProductId,
                     Name = pr.Product.Name,
                     Description = pr.Product.Description,
                     Price = pr.Price

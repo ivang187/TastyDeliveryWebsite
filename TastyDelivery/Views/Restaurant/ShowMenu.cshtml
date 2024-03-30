@@ -13,19 +13,27 @@
         @foreach (var menuItem in Model)
         {
             <div style="list-style: none">
-                <li>@menuItem.Name - @menuItem.Price BGN <input type="number" name="quantity[@menuItem.Quantity]" value="1" min="1" max="20" style="width: 6ch" /> </li>
+                <li>@menuItem.Name - @menuItem.Price BGN <input type="number" id="quantity_@menuItem.ProductId" value="1" min="1" max="20" style="width: 6ch" /> </li>
                 <li>@menuItem.Description</li>
-                <button onclick="addToOrder(@menuItem.Id, @menuItem.Price)">Add To Order</button>
+                <button onclick="addToOrder('@menuItem.ProductId', '@menuItem.Price')">Add To Order</button>
             </div>
         }
     </div>
 </div>
 
-
 <script>
-    function addToOrder(itemId, itemPrice) {
-        var quantity = document.getElementById('quantity_' + itemId).value;
-        var url = '@Url.Action("Add", "ShoppingCart")' + '?id=' + itemId + '&price=' + itemPrice + '&quantity=' + quantity;
-        location.href = url;
+    function getQuantity(productId) {
+        var quantityField = document.getElementById('quantity_' + productId);
+        var quantity = quantityField.value;
+
+        return quantity;
+    }
+
+    function addToOrder(productId, price) {
+        var quantity = getQuantity(productId);
+
+        location.href = '@Url.Action("Add", "ShoppingCart")' + '?restaurantId=@Model.First().RestaurantId' + '&productId=' + productId + '&price=' + price + '&quantity=' + quantity;
     }
 </script>
+
+

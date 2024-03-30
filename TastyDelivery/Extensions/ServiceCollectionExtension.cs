@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
@@ -17,6 +18,14 @@ namespace TastyDelivery.Core.Services.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.HttpOnly = true;
+            });
+            services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IShoppingCartService, ShoppingCartService>();
             return services;
         }
 
@@ -41,6 +50,7 @@ namespace TastyDelivery.Core.Services.Extensions
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<TastyDeliveryDbContext>();
 
             return services;
