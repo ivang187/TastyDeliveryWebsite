@@ -12,8 +12,8 @@ using TastyDelivery.Infrastructure.Data;
 namespace TastyDelivery.Infrastructure.Migrations
 {
     [DbContext(typeof(TastyDeliveryDbContext))]
-    [Migration("20240329160640_AllProductsMigration")]
-    partial class AllProductsMigration
+    [Migration("20240331081148_ReinstalledMigration")]
+    partial class ReinstalledMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

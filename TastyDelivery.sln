@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TastyDelivery", "TastyDelivery\TastyDelivery.csproj", "{9414C96C-CD3E-4989-9929-DC2E8E9AFB01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TastyDelivery", "TastyDelivery\TastyDelivery.csproj", "{9414C96C-CD3E-4989-9929-DC2E8E9AFB01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TastyDelivery.Core", "TastyDelivery.Core\TastyDelivery.Core.csproj", "{CDF5FE66-8246-4704-84D9-BBDFEB51B9BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TastyDelivery.Core", "TastyDelivery.Core\TastyDelivery.Core.csproj", "{CDF5FE66-8246-4704-84D9-BBDFEB51B9BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TastyDelivery.Infrastructure", "TastyDelivery.Infrastructure\TastyDelivery.Infrastructure.csproj", "{579C5CF8-1405-4A47-9819-E58BE3DB5650}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TastyDelivery.Infrastructure", "TastyDelivery.Infrastructure\TastyDelivery.Infrastructure.csproj", "{579C5CF8-1405-4A47-9819-E58BE3DB5650}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

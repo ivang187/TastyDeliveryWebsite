@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data;
@@ -31,7 +25,7 @@ namespace TastyDelivery.Core.Services.Extensions
 
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'VkusnoContextConnection' not found.");
+            var connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found");
 
             services.AddDbContext<TastyDeliveryDbContext>(options =>
                 options.UseSqlServer(connectionString));
