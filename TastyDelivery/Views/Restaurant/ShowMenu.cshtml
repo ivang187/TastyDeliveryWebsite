@@ -2,10 +2,6 @@
 
 @model IEnumerable<RestaurantMenuViewModel>
 
-@{
-    ViewBag.Title = $"Menu";
-}
-
 <h2 class="text-center">@ViewBag.Title</h2>
 
 <div class="container">
@@ -15,7 +11,7 @@
                 @foreach (var menuItem in Model)
                 {
                     <div class="menu-item">
-                        <h4>@menuItem.Name - @menuItem.Price BGN</h4>
+                        <h4>@menuItem.ProductName - @menuItem.Price BGN</h4>
                         <p>@menuItem.Description</p>
                         <div class="input-group mb-3">
                             <input type="number" id="quantity_@menuItem.ProductId" class="form-control" value="1" min="1" max="20" style="width: 6ch">

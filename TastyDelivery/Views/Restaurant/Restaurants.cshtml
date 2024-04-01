@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<RestaurantsViewModel>
 
+@{
+    ViewBag.Title = "Restaurants";
+}
+
 <div class="container">
     <div class="text-center">
         <h1 class="display-4">Welcome</h1>
@@ -10,7 +14,7 @@
         @foreach (var restaurant in Model)
         {
             <div class="col-md-4 mb-4">
-                <a href="@Url.Action("ShowMenu", "Restaurant", new { id = restaurant.Id })" class="card text-decoration-none text-dark">
+                <a href="@Url.Action("ShowMenu", "Restaurant", new { id = restaurant.Id})" class="card text-decoration-none text-dark">
                     <div class="card-body">
                         <h4 class="card-title mb-3">@restaurant.Name</h4>
                         <p class="card-text mb-2">@restaurant.Location</p>

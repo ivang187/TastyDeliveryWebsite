@@ -22,6 +22,13 @@ namespace TastyDelivery.Core.Services
             repository = _repository;
         }
 
+        public async Task<string> GetRestaurantName(int id)
+        {
+            return await repository.AllReadOnly<Restaurant>()
+                .Where(r => r.Id == id)
+                .Select(x => x.Name).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<RestaurantsViewModel>> GetAllRestaurants()
         {
             return await repository.AllReadOnly<Restaurant>()
@@ -41,9 +48,10 @@ namespace TastyDelivery.Core.Services
                 .Where(r => r.RestaurantId == id)
                 .Select(pr => new RestaurantMenuViewModel
                 {
+                    RestaurantName = pr.Restaurant.Name,
                     RestaurantId = pr.RestaurantId,
                     ProductId = pr.ProductId,
-                    Name = pr.Product.Name,
+                    ProductName = pr.Product.Name,
                     Description = pr.Product.Description,
                     Price = pr.Price
                 })
