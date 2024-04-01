@@ -2,7 +2,10 @@
 
 @model Cart
 
-<h1>Shopping Cart</h1>
+@{
+    ViewBag.Title = $"Cart";
+}
+<h1>Cart</h1>
 
 @if (Model != null && Model.Products.Count > 0)
 {
@@ -27,9 +30,11 @@
             }
         </tbody>
     </table>
-    <div>Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN</div>
+    <div>
+        Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN <div><a href="/Checkout" class="btn btn-primary">Proceed to Checkout</a></div></div>
+
 }
 else
 {
-    <p>Your shopping cart is empty.</p>
+    <p>Your cart is empty.</p>
 }

@@ -1,20 +1,23 @@
 ﻿@model IEnumerable<RestaurantsViewModel>
 
-<div class="text-center-row" style="text-align: center">
-    <h1 class="display-4">Welcome</h1>
-    <h1 class="display-4">Choose Your Restaurant</h1>
-</div>
+<div class="container">
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <h2 class="display-4">Choose Your Restaurant</h2>
+    </div>
 
-
-<div class="container" style="text-align: center">
-    @foreach (var e in Model)
-    {
-        <a href="@Url.Action("ShowMenu", "Restaurant", new {id = e.Id})" class="card row-md-4" style="width: 20rem; margin-block: 10px; text-decoration: none; color: black; display: inline-block">
-            <div class="card-body">
-                <h4 class="card-title mb-4">@e.Name</h4>
-                <h5 class="card-title mb-4">@e.Location</h5>
-                <h5 class="card-title mb-4">@e.WorkingHours</h5>
+    <div class="row justify-content-center">
+        @foreach (var restaurant in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <a href="@Url.Action("ShowMenu", "Restaurant", new { id = restaurant.Id })" class="card text-decoration-none text-dark">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">@restaurant.Name</h4>
+                        <p class="card-text mb-2">@restaurant.Location</p>
+                        <p class="card-text mb-2">Working Hours: @restaurant.WorkingHours</p>
+                    </div>
+                </a>
             </div>
-        </a>
-    }
+        }
+    </div>
 </div>

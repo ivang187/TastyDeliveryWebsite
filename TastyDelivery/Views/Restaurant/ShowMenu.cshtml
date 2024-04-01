@@ -8,18 +8,39 @@
 
 <h2 class="text-center">@ViewBag.Title</h2>
 
-<div class="container" style="text-align: center">
-    <div class="card row-md-4" style="text-align: left">
-        @foreach (var menuItem in Model)
-        {
-            <div style="list-style: none">
-                <li>@menuItem.Name - @menuItem.Price BGN <input type="number" id="quantity_@menuItem.ProductId" value="1" min="1" max="20" style="width: 6ch" /> </li>
-                <li>@menuItem.Description</li>
-                <button onclick="addToOrder('@menuItem.ProductId', '@menuItem.Price')">Add To Order</button>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="menu-container">
+                @foreach (var menuItem in Model)
+                {
+                    <div class="menu-item">
+                        <h4>@menuItem.Name - @menuItem.Price BGN</h4>
+                        <p>@menuItem.Description</p>
+                        <div class="input-group mb-3">
+                            <input type="number" id="quantity_@menuItem.ProductId" class="form-control" value="1" min="1" max="20" style="width: 6ch">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="addToOrder('@menuItem.ProductId', '@menuItem.Price')">Add To Order</button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-        }
+        </div>
     </div>
 </div>
+
+<style>
+    .menu-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    .menu-item {
+        margin-bottom: 20px;
+    }
+</style>
 
 <script>
     function getQuantity(productId) {
