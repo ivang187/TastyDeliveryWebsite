@@ -6,7 +6,6 @@ using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.ShoppingCart;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
-using TastyDelivery.Infrastructure.Migrations;
 
 namespace TastyDelivery.Core.Services
 {

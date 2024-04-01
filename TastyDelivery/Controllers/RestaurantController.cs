@@ -23,11 +23,14 @@ namespace TastyDelivery.Controllers
         public async Task<IActionResult> ShowMenu(int id)
         {
             var model = await _restaurantService.GetRestaurantMenu(id);
+            var restaurantName = await _restaurantService.GetRestaurantName(id);
 
             if(model == null)
             {
                 return BadRequest();
             }
+
+            ViewBag.Title = $"{restaurantName} \nMenu";
 
             return View(model);
         }
