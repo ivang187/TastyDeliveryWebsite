@@ -2,24 +2,32 @@
 
 @model IEnumerable<RestaurantMenuViewModel>
 
+@{
+    var groupedItems = Model.GroupBy(item => item.Category);
+}
+
 <h2 class="text-center">@ViewBag.Title</h2>
 
 <div class="container">
     <div class="row">
         <div class="col-md-6">
             <div class="menu-container">
-                @foreach (var menuItem in Model)
+                @foreach (var categoryGroup in groupedItems)
                 {
-                    <div class="menu-item">
-                        <h4>@menuItem.ProductName - @menuItem.Price BGN</h4>
-                        <p>@menuItem.Description</p>
-                        <div class="input-group mb-3">
-                            <input type="number" id="quantity_@menuItem.ProductId" class="form-control" value="1" min="1" max="20" style="width: 6ch">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" onclick="addToOrder('@menuItem.ProductId', '@menuItem.Price')">Add To Order</button>
+                    <h3 class="category-heading">@categoryGroup.Key</h3>
+                    @foreach (var menuItem in categoryGroup)
+                    {
+                        <div class="menu-item">
+                            <h4>@menuItem.ProductName - @menuItem.Price BGN</h4>
+                            <p>@menuItem.Description</p>
+                            <div class="input-group mb-3">
+                                <input type="number" id="quantity_@menuItem.ProductId" class="form-control" value="1" min="1" max="20" style="width: 6ch">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="addToOrder('@menuItem.ProductId', '@menuItem.Price')">Add To Order</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         </div>
@@ -31,6 +39,11 @@
         background-color: #f8f9fa;
         padding: 20px;
         border-radius: 5px;
+    }
+
+    .category-heading {
+        color: #007bff;
+        margin-bottom: 10px; 
     }
 
     .menu-item {

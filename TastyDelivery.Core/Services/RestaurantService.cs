@@ -53,7 +53,8 @@ namespace TastyDelivery.Core.Services
                     ProductId = pr.ProductId,
                     ProductName = pr.Product.Name,
                     Description = pr.Product.Description,
-                    Price = pr.Price
+                    Price = pr.Price,
+                    Category = pr.Product.Category
                 })
                 .ToListAsync();
         }

@@ -1,4 +1,6 @@
-﻿namespace TastyDelivery.Core.Models.Restaurant
+﻿using TastyDelivery.Infrastructure.Data.Models.Enums;
+
+namespace TastyDelivery.Core.Models.Restaurant
 {
     public class RestaurantMenuViewModel
     {
@@ -14,5 +16,7 @@
         public double Price { get; set; }
 
         public int Quantity { get; set; }
+
+        public ProductCategory Category { get; set; }
     }
 }
