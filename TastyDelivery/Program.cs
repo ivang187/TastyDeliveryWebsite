@@ -32,7 +32,7 @@ app.UseAuthorization();
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
-app.SeedAdmin();
+app.SeedRolesFromEnum();
 app.UseSession();
 
 await app.RunAsync();

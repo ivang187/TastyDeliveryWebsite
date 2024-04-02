@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Utilities.Constants;
 
 namespace TastyDelivery.Infrastructure.Data.Models.IdentityModels
@@ -20,6 +21,8 @@ namespace TastyDelivery.Infrastructure.Data.Models.IdentityModels
         [MaxLength(UsersConstants.UserLastNameMaxLength)]
         [MinLength(UsersConstants.UserLastNameMinLength)]
         public string LastName { get; set; } = string.Empty;
+
+        public UserRole Role { get; set; }
 
     }
 }

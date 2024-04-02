@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
 namespace TastyDelivery.Extensions
@@ -35,6 +36,30 @@ namespace TastyDelivery.Extensions
             
             return app;              
         }
-    
+
+        public static IApplicationBuilder SeedRolesFromEnum(this IApplicationBuilder app)
+        {
+            using var scopedServices = app.ApplicationServices.CreateScope();
+            var services = scopedServices.ServiceProvider;
+
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task.Run(async () =>
+            {
+                foreach (var roleName in Enum.GetNames(typeof(UserRole)))
+                {
+                    if (await roleManager.RoleExistsAsync(roleName))
+                    {
+                        continue;
+                    }
+
+                    var role = new IdentityRole { Name = roleName };
+                    await roleManager.CreateAsync(role);
+                }
+            }).GetAwaiter().GetResult();
+
+            return app;
+        }
+
     }
 }
