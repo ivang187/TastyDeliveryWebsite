@@ -33,27 +33,39 @@ namespace TastyDelivery.Controllers
 
         }
 
-        public async Task<IActionResult> Add(int restaurantId, int productId, double price, int quantity)
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] dynamic data)
         {
-            var model = await shoppingCartService.AddToCart(productId, price, quantity);
-
-            var cartJson = this.HttpContext.Session.GetString(GetUserSession());
-            Cart cart = cartJson != null ? JsonConvert.DeserializeObject<Cart>(cartJson) : new Cart();
-
-            var existingItem = cart.Products.FirstOrDefault(item => item.Id == model.Id);
-
-            if (existingItem != null)
+            try
             {
-                existingItem.Quantity += quantity;
+                int productId = data.GetProperty("productId").GetInt32();
+                double price = data.GetProperty("price").GetDouble();
+                int quantity = data.GetProperty("quantity").GetInt32();
+
+                var model = await shoppingCartService.AddToCart(productId, price, quantity);
+
+                var cartJson = this.HttpContext.Session.GetString(GetUserSession());
+                Cart cart = cartJson != null ? JsonConvert.DeserializeObject<Cart>(cartJson) : new Cart();
+
+                var existingItem = cart.Products.FirstOrDefault(item => item.Id == model.Id);
+
+                if (existingItem != null)
+                {
+                    existingItem.Quantity += quantity;
+                }
+                else
+                {
+                    cart.Products.Add(model);
+                }
+
+                this.HttpContext.Session.SetString(GetUserSession(), JsonConvert.SerializeObject(cart));
+
+                return Json(new { success = true });
             }
-            else
+            catch (Exception ex)
             {
-                cart.Products.Add(model);
+                return Json(new { success = false, message = ex.Message });
             }
-
-            this.HttpContext.Session.SetString(GetUserSession(), JsonConvert.SerializeObject(cart));
-
-            return RedirectToAction("ShowMenu", "Restaurant" , new { id = restaurantId });
         }
 
         private string GetUserSession()

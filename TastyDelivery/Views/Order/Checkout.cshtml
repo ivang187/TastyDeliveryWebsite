@@ -1,4 +1,7 @@
-﻿@{
+﻿@using TastyDelivery.Infrastructure.Data.Models.IdentityModels
+@model Customer
+
+@{
     ViewBag.Title = "Checkout";
 }
 
@@ -9,7 +12,7 @@
     <h2>Delivery Details</h2>
     <form>
         <div>
-            <label for="fullName">Full Name:</label>
+            <label for="fullName"></label>
             <input type="text" id="fullName" name="fullName" required>
         </div>
         <div>
