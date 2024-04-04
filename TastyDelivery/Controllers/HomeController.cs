@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TastyDelivery.Areas.Admin;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Models;
 
@@ -18,10 +19,16 @@ namespace TastyDelivery.Controllers
 
         public IActionResult Index()
         {
+
+            if (User.IsInRole(AdminConstants.AdminRoleName))
+            {
+                return RedirectToAction("Index", "Home", new {area = "Admin"});
+            }
             if(User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Restaurants", "Restaurant");
             }
+
             return View();
         }
 

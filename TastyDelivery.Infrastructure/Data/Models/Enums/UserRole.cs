@@ -8,8 +8,8 @@ namespace TastyDelivery.Infrastructure.Data.Models.Enums
 {
     public enum UserRole
     {
-        Admin,
-        Customer,
-        DeliveryMan
+        Customer = 0,
+        Admin = 1,
+        DeliveryMan = 2
     }
 }

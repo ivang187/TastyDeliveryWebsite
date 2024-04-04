@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using TastyDelivery.Infrastructure.Data;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
@@ -15,26 +16,34 @@ namespace TastyDelivery.Extensions
 
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var dbContext = services.GetRequiredService<TastyDeliveryDbContext>();
 
             Task.Run(async () =>
             {
-                if (await roleManager.RoleExistsAsync("Admin"))
+                var adminUser = await userManager.FindByEmailAsync("ivang187@gmail.com");
+
+                if (adminUser.Role == UserRole.Admin)
                 {
                     return;
                 }
-                
 
-                var role = new IdentityRole { Name = "Admin" };
+                var addToRoleResult = await userManager.AddToRoleAsync(adminUser, UserRole.Admin.ToString());
 
-                await roleManager.CreateAsync(role);
+                if (addToRoleResult.Succeeded)
+                {
+                    adminUser.Role = UserRole.Admin;
+                    await dbContext.SaveChangesAsync(); 
+                }
+                else
+                {
+                    // Handle failed role assignment
+                    // Log error or throw exception
+                }
 
-                var admin = await userManager.FindByNameAsync("ivang187@gmail.com");
 
-                await userManager.AddToRoleAsync(admin, role.Name);
-            }).GetAwaiter()
-            .GetResult();
-            
-            return app;              
+            }).GetAwaiter().GetResult();
+
+            return app;
         }
 
         public static IApplicationBuilder SeedRolesFromEnum(this IApplicationBuilder app)

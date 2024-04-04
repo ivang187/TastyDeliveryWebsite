@@ -29,10 +29,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
+app.MapControllers();
+
+app.MapControllerRoute(
+    name: "Areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
+app.SeedAdmin();
 app.SeedRolesFromEnum();
 app.UseSession();
+
+
 
 await app.RunAsync();
