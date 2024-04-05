@@ -47,8 +47,7 @@ namespace TastyDelivery.Controllers
 
                 var model = await shoppingCartService.FindItemToAdd(productId, price, quantity);
 
-                var cartJson = this.HttpContext.Session.GetString(GetUserSession());
-                Cart cart = cartJson != null ? JsonConvert.DeserializeObject<Cart>(cartJson) : new Cart();
+                var cart = GetCartSession();
 
                 var existingItem = cart.Products.FirstOrDefault(item => item.Id == model.Id);
 
@@ -61,7 +60,7 @@ namespace TastyDelivery.Controllers
                     cart.Products.Add(model);
                 }
 
-                this.HttpContext.Session.SetString(GetUserSession(), JsonConvert.SerializeObject(cart));
+                UpdateCartSession(cart);    
 
                 return Json(new { success = true });
             }
@@ -75,14 +74,13 @@ namespace TastyDelivery.Controllers
         {
             var model = await shoppingCartService.FindItemToRemove(id);
 
-            var cartJson = this.HttpContext.Session.GetString(GetUserSession());
-            Cart cart = cartJson != null ? JsonConvert.DeserializeObject<Cart>(cartJson) : new Cart();
+            var cart = GetCartSession();
 
             var existingItem = cart.Products.FirstOrDefault(p => p.Id == model.Id);
 
             cart.Products.Remove(existingItem);
 
-            this.HttpContext.Session.SetString(GetUserSession(), JsonConvert.SerializeObject(cart));
+            UpdateCartSession(cart);
 
             return RedirectToAction(nameof(GetShoppingCart));
         }
@@ -94,6 +92,21 @@ namespace TastyDelivery.Controllers
             string sessionKey = $"Cart_{userId}";
 
             return sessionKey;
+        }
+
+        private Cart GetCartSession()
+        {
+            var cartJson = this.HttpContext.Session.GetString(GetUserSession());
+            Cart cart = cartJson != null ? JsonConvert.DeserializeObject<Cart>(cartJson) : new Cart();
+
+            return cart;
+        }
+
+        private Cart UpdateCartSession(Cart cart)
+        {
+            this.HttpContext.Session.SetString(GetUserSession(), JsonConvert.SerializeObject(cart));
+
+            return cart;
         }
     }
 }
