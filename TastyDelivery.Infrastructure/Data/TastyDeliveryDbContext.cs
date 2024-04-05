@@ -21,11 +21,18 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<ProductsRestaurants> ProductsRestaurants { get; set; } = null!;
 
+    public DbSet<Order> Orders { get; set; } = null!;
+
+    public DbSet<OrderProducts> OrderProducts { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<ProductsRestaurants>()
             .HasKey(pr => new { pr.RestaurantId, pr.ProductId });
+
+        builder.Entity<OrderProducts>()
+            .HasKey(pr => new { pr.OrderId, pr.ProductId });
 
         builder.ApplyConfiguration(new RestaurantConfiguration());
         builder.ApplyConfiguration(new ProductConfiguration());

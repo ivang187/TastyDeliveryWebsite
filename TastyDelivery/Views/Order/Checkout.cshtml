@@ -1,5 +1,10 @@
-﻿@using TastyDelivery.Infrastructure.Data.Models.IdentityModels
-@model Customer
+﻿@using System.Security.Claims
+@using Newtonsoft.Json
+@using TastyDelivery.Core.Models.ShoppingCart
+@using TastyDelivery.Infrastructure.Data.Models.IdentityModels
+@using Microsoft.AspNetCore.Http;
+@model Cart
+
 
 @{
     ViewBag.Title = "Checkout";
@@ -12,8 +17,12 @@
     <h2>Delivery Details</h2>
     <form>
         <div>
-            <label for="fullName"></label>
-            <input type="text" id="fullName" name="fullName" required>
+            <label for="firtName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+        </div>
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
         </div>
         <div>
             <label for="address">Address:</label>
@@ -23,6 +32,13 @@
             <label for="phone">Phone:</label>
             <input type="text" id="phone" name="phone" required>
         </div>
+        @if (Model != null)
+        {
+            <h2>Cart Summary</h2>
+            <p>Total Items: @Model.Products.Sum(item => item.Quantity)</p>
+            <p>Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN</p>
+            <a href="@Url.Action("GetShoppingCart", "ShoppingCart")" class="btn btn-primary">Back to Shopping Cart</a>
+        }
         <button type="submit">Place Order</button>
     </form>
 </div>

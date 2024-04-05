@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 using System.Security.Claims;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.ShoppingCart;
@@ -83,6 +84,16 @@ namespace TastyDelivery.Controllers
             UpdateCartSession(cart);
 
             return RedirectToAction(nameof(GetShoppingCart));
+        }
+
+        public IActionResult SendToCheckout()
+        {
+            var cart = GetCartSession();
+
+            string cartJson = JsonConvert.SerializeObject(cart);
+            string encodedCartJson = WebUtility.UrlEncode(cartJson);
+
+            return RedirectToAction("Checkout", "Order", new { cartData = encodedCartJson });
         }
 
         private string GetUserSession()

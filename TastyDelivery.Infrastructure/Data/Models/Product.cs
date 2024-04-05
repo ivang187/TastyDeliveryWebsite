@@ -25,6 +25,9 @@ namespace TastyDelivery.Infrastructure.Data.Models
         [MinLength(AppConstants.ProductDescriptionMinLength)]
         public string Description { get; set; } = string.Empty;
 
+        [Required]
         public ProductCategory Category { get; set; }
+
+        public ICollection<OrderProducts> Products { get; set; } = new List<OrderProducts>();
     }
 }

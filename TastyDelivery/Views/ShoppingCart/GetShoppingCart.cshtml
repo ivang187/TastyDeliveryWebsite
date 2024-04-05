@@ -32,7 +32,7 @@
         </tbody>
     </table>
     <div>
-        Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN <div><a href="@Url.Action("Checkout", "Order")" class="btn btn-primary">Proceed to Checkout</a></div></div>
+        Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN <div><a href="@Url.Action("SendToCheckout", "ShoppingCart")" class="btn btn-primary">Proceed to Checkout</a></div></div>
 
 }
 else
