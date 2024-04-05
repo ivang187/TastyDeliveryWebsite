@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Product\**" />
+    <EmbeddedResource Remove="Models\Product\**" />
+    <None Remove="Models\Product\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
@@ -16,10 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TastyDelivery.Infrastructure\TastyDelivery.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Product\" />
   </ItemGroup>
 
 </Project>

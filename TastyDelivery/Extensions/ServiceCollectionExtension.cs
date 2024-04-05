@@ -21,6 +21,7 @@ namespace TastyDelivery.Core.Services.Extensions
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
             services.AddScoped<IAdminService, AdminService>();  
+            services.AddScoped<IProductService, ProductService>();
             return services;
         }
 

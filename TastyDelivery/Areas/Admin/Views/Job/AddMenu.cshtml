@@ -1,0 +1,40 @@
+﻿@using TastyDelivery.Core.Models.Restaurant
+
+@model IEnumerable<RestaurantModel>
+
+@{
+    ViewBag.Title = "Update Restaurant Menu";
+}
+
+<h1>@ViewBag.Title</h1>
+<hr />
+
+
+
+<form asp-action="UpdateMenu" method="post">
+    <select id="restaurantId" name="restaurantId" class="form-control">
+        <option value="">Select a restaurant</option>
+        @foreach (var restaurant in Model)
+        {
+            <option value="@restaurant.Id">@restaurant.Name</option>
+        }
+    </select>
+    <div class="form-group">
+        <label for="menuItems">Menu Items:</label>
+        <textarea id="menuItems" name="menuItems" class="form-control" rows="4"></textarea>
+    </div>
+
+    <input type="hidden" id="selectedRestaurantId" name="selectedRestaurantId" value="" />
+
+    <button type="submit" class="btn btn-primary">Add Product</button>
+</form>
+
+<script>
+    function updateSelectedRestaurantId() {
+        var selectedRestaurantId = document.getElementById("restaurantId").value;
+        console.log("Selected Restaurant ID:", selectedRestaurantId);
+        document.getElementById("selectedRestaurantId").value = selectedRestaurantId;
+    }
+
+    document.getElementById("restaurantId").addEventListener("change", updateSelectedRestaurantId);
+</script>
