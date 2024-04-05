@@ -31,5 +31,15 @@ namespace TastyDelivery.Core.Services.Common
         {
             return GetDbSet<T>().AsNoTracking();
         }
+
+        public void AddNew<T>(T entity) where T : class
+        {
+            GetDbSet<T>().Add(entity);
+        }
+
+        public void SaveChanges()
+        {
+            context.SaveChangesAsync();
+        }
     }
 }

@@ -11,5 +11,9 @@ namespace TastyDelivery.Core.Services.Common
         public IQueryable<T> All<T>() where T : class;
 
         public IQueryable<T> AllReadOnly<T>() where T : class;
+
+        public void AddNew<T>(T entity) where T : class;
+
+        public void SaveChanges();
     }
 }

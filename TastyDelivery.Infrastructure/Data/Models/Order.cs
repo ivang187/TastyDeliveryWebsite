@@ -12,6 +12,7 @@ namespace TastyDelivery.Infrastructure.Data.Models
     public class Order
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]

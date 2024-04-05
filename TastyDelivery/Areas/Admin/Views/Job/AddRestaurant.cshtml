@@ -1,0 +1,38 @@
+﻿@using TastyDelivery.Areas.Admin.Models
+
+@model AddRestaurantFormViewModel
+
+@{
+    ViewBag.Title = "Add New Restaurant";
+}
+
+<h1>@ViewBag.Title</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="CreateRestaurant" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="WorkingHours" class="control-label"></label>
+                <textarea asp-for="WorkingHours" class="form-control"></textarea>
+                <span asp-validation-for="WorkingHours" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Restaurant</button>
+        </form>
+    </div>
+</div>

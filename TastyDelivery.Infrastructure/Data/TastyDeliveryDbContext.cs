@@ -34,6 +34,18 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<OrderProducts>()
             .HasKey(pr => new { pr.OrderId, pr.ProductId });
 
+        builder.Entity<Restaurant>()
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
+        builder.Entity<Order>()
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
+        builder.Entity<Product>()
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
         builder.ApplyConfiguration(new RestaurantConfiguration());
         builder.ApplyConfiguration(new ProductConfiguration());
         builder.ApplyConfiguration(new ProductRestaurantsConfiguration());

@@ -20,6 +20,7 @@ namespace TastyDelivery.Core.Services.Extensions
             });
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            services.AddScoped<IAdminService, AdminService>();  
             return services;
         }
 
@@ -30,7 +31,7 @@ namespace TastyDelivery.Core.Services.Extensions
             services.AddDbContext<TastyDeliveryDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddScoped<IRepository, Repository>();
+            services.AddTransient<IRepository, Repository>();
 
             return services;
         }

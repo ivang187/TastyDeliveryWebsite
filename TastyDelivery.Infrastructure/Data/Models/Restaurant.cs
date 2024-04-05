@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TastyDelivery.Infrastructure.Utilities.Constants;
 
 namespace TastyDelivery.Infrastructure.Data.Models
@@ -7,6 +8,7 @@ namespace TastyDelivery.Infrastructure.Data.Models
     public class Restaurant
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]

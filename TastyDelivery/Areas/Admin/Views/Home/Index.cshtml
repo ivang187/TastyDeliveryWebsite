@@ -11,9 +11,10 @@
     </div>
     <div>
         <h2>Manage Restaurants and Drivers</h2>
-        <button>Add New Restaurant</button>
+        <a href="@Url.Action("AddRestaurant", "Job")" class="btn btn-primary">Add New Restaurant</a>
         <button>View Active Drivers</button>
         <button>Update Restaurant Menu</button>
+        <button>Appoint Driver</button>
     </div>
 </div>
 
@@ -30,6 +31,19 @@
     }
 
     button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary{
         display: block;
         width: 100%;
         padding: 10px;
