@@ -11,6 +11,8 @@ namespace TastyDelivery.Core.Contracts
 {
     public interface IShoppingCartService
     {
-        public Task<CartItemViewModel> AddToCart(int id, double price, int quantity);
+        public Task<CartItemViewModel> FindItemToAdd(int id, double price, int quantity);
+
+        public Task<CartItemViewModel> FindItemToRemove(int id);
     }
 }

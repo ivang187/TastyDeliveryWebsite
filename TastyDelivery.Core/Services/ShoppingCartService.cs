@@ -18,7 +18,7 @@ namespace TastyDelivery.Core.Services
             _repository = repository;
         }
 
-        public async Task<CartItemViewModel> AddToCart(int id, double price, int quantity)
+        public async Task<CartItemViewModel> FindItemToAdd(int id, double price, int quantity)
         {
             return await _repository.AllReadOnly<Product>()
                 .Where(p => p.Id == id)
@@ -28,6 +28,17 @@ namespace TastyDelivery.Core.Services
                     Name = p.Name,
                     Price = price,
                     Quantity = quantity
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<CartItemViewModel> FindItemToRemove(int id)
+        {
+            return await _repository.AllReadOnly<Product>()
+                .Where(p => p.Id == id)
+                .Select (p => new CartItemViewModel
+                {
+                    Id = p.Id,
                 })
                 .FirstOrDefaultAsync();
         }

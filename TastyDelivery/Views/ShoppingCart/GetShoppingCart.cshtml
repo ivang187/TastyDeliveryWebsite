@@ -26,6 +26,7 @@
                     <td>@item.Quantity</td>
                     <td>@item.Price BGN</td>
                     <td>@(item.Price * item.Quantity) BGN</td>
+                    <td><a href="@Url.Action("Remove", "ShoppingCart", new {id = item.Id})" class="btn btn-primary">Remove</a></td>
                 </tr>
             }
         </tbody>
