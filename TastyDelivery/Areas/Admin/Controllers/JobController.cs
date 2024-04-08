@@ -73,5 +73,10 @@ namespace TastyDelivery.Areas.Admin.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult ToWebsite()
+        {
+            return RedirectToAction("Restaurants", "Restaurant");
+        }
     }
 }
