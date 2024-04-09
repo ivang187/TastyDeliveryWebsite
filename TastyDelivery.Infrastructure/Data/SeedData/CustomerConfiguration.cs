@@ -13,7 +13,6 @@ namespace TastyDelivery.Infrastructure.Data.SeedData
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            
         }
     }
 }

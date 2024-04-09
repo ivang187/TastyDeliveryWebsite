@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.ShoppingCart;
@@ -20,12 +21,13 @@ namespace TastyDelivery.Core.Services
 
         public async Task<CartItemViewModel> FindItemToAdd(int id, double price, int quantity)
         {
-            return await _repository.AllReadOnly<Product>()
-                .Where(p => p.Id == id)
+            return await _repository.AllReadOnly<ProductsRestaurants>()
+                .Where(p => p.ProductId == id)
                 .Select(p => new CartItemViewModel
                 {
-                    Id = p.Id,
-                    Name = p.Name,
+                    RestaurantName = p.Restaurant.Name,
+                    Id = p.ProductId,
+                    Name = p.Product.Name,
                     Price = price,
                     Quantity = quantity
                 })

@@ -14,5 +14,6 @@ namespace TastyDelivery.Core.Contracts
         public Task<CartItemViewModel> FindItemToAdd(int id, double price, int quantity);
 
         public Task<CartItemViewModel> FindItemToRemove(int id);
+
     }
 }

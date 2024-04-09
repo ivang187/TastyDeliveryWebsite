@@ -38,9 +38,9 @@ namespace TastyDelivery.Controllers
                 var order = new CheckoutViewModel
                 {
                     Products = products,
-                    User = user,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
+                    
                 };
 
                 return View(order);
@@ -61,6 +61,11 @@ namespace TastyDelivery.Controllers
             }
 
             return null;
+        }
+
+        public async Task<IActionResult> CreateOrder()
+        {
+            return View();  
         }
     }
 }

@@ -3,34 +3,35 @@
 @model Cart
 
 @{
-    ViewBag.Title = $"Cart";
+    ViewBag.Title = "Cart";
 }
 <h1>Cart</h1>
 
 @if (Model != null && Model.Products.Count > 0)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Products)
-            {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.Price BGN</td>
-                    <td>@(item.Price * item.Quantity) BGN</td>
-                    <td><a href="@Url.Action("Remove", "ShoppingCart", new {id = item.Id})" class="btn btn-primary">Remove</a></td>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Action</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Products)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price BGN</td>
+                        <td>@(item.Price * item.Quantity) BGN</td>
+                        <td><a href="@Url.Action("Remove", "ShoppingCart", new {id = item.Id})" class="btn btn-primary">Remove</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     <div>
         Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN <div><a href="@Url.Action("SendToCheckout", "ShoppingCart")" class="btn btn-primary">Proceed to Checkout</a></div></div>
 

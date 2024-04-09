@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace TastyDelivery.Infrastructure.Data.Models.IdentityModels
         [MinLength(UsersConstants.UserLastNameMinLength)]
         public string LastName { get; set; } = string.Empty;
 
-        public UserRole Role { get; set; }
+        public virtual UserRole Role { get; set; }
 
     }
 }
