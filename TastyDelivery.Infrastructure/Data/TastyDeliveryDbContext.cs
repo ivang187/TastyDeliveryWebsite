@@ -26,8 +26,6 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<OrderProducts> OrderProducts { get; set; } = null!;
 
-    public DbSet<Customer> Customers { get; set; } = null!;
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -50,7 +48,12 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
         .ValueGeneratedOnAdd();
 
         builder.Entity<ApplicationUser>().ToTable("AspNetUsers");
-        builder.Entity<Customer>().ToTable("Customers");
+
+        builder.Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(u => u.Orders)
+            .HasForeignKey(o => o.UserId)
+            .IsRequired();
 
         builder.ApplyConfiguration(new RestaurantConfiguration());
         builder.ApplyConfiguration(new ProductConfiguration());

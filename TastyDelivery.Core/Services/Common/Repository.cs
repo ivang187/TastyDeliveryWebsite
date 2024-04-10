@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TastyDelivery.Infrastructure.Data;
@@ -40,6 +41,11 @@ namespace TastyDelivery.Core.Services.Common
         public void SaveChanges()
         {
             context.SaveChangesAsync();
+        }
+
+        public void Update<T>(T entity) where T : class
+        {
+            GetDbSet<T>().Update(entity);
         }
     }
 }

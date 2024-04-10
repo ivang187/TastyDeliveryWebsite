@@ -11,7 +11,7 @@ namespace TastyDelivery.Core.Models.Order
 {
     public class CheckoutViewModel
     {
-        public Customer User { get; set; }
+        public ApplicationUser User { get; set; }
 
         public string FirstName { get; set; }
 

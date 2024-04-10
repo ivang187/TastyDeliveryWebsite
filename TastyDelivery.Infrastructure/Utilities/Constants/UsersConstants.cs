@@ -10,12 +10,12 @@ namespace TastyDelivery.Infrastructure.Utilities.Constants
     public class UsersConstants
     {
         public const int UserFirstNameMinLength = 1;
-        public const int UserFirstNameMaxLength = 30;
+        public const int UserFirstNameMaxLength = 50;
 
         public const int UserLastNameMinLength = 1;
-        public const int UserLastNameMaxLength = 30;
+        public const int UserLastNameMaxLength = 50;
 
-        public const int CityNameMaxLength = 30;
-        public const int CityNameMinLength = 1;
+        public const int AddressNameMaxLength = 100;
+        public const int AddressNameMinLength = 10;
     }
 }

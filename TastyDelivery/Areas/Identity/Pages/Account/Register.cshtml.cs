@@ -18,8 +18,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using NuGet.Protocol.Plugins;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 using TastyDelivery.Infrastructure.Utilities.Constants;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
+
 
 namespace TastyDelivery.Areas.Identity.Pages.Account
 {
@@ -90,12 +93,14 @@ namespace TastyDelivery.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
+                    Role = UserRole.Customer,
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
-                { 
+                {
+                    await _userManager.AddToRoleAsync(user, nameof(UserRole.Customer));
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }

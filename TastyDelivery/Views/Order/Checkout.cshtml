@@ -12,7 +12,7 @@
 
 <div>
     <h2>Delivery Details</h2>
-    <form>
+    <form asp-controller="Order" asp-action="UserInfo" method="post">
         <div class="form-group">
             <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" value="@Model.FirstName" class="form-control" required>
@@ -23,11 +23,11 @@
         </div>
         <div class="form-group">
             <label for="address">Address:</label>
-            <input type="text" id="address" name="address" class="form-control" required>
+            <input type="text" id="address" name="address" value="@Model.Address" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
-            <input type="text" id="phone" name="phone" class="form-control" required>
+            <input type="text" id="phone" name="phone" value ="@Model.Phone"class="form-control" required>
         </div>
 
         <div class="form-check">
@@ -37,7 +37,7 @@
 
         <h2>Choose Payment</h2>
         <div class="form-check">
-            <input type="checkbox" id="savePaymentInfo" name="savePaymentInfo" class="form-check-input">
+            <input type="checkbox" id="savePaymentInfo" name="savePaymentInfo" class="form-check-input" required>
             <label for="savePaymentInfo" class="form-check-label">Cash on delivery</label>
         </div>
 
@@ -52,3 +52,13 @@
         <button type="submit" class="btn btn-success">Place Order</button>
     </form>
 </div>
+
+<script>
+    function validateForm() {
+        if (!document.getElementById("savePaymentInfo").checked) {
+            alert("Please select Cash on delivery");
+            return false;
+        }
+        return true;
+    }
+</script>

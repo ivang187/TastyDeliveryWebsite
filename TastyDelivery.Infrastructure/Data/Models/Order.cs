@@ -24,8 +24,6 @@ namespace TastyDelivery.Infrastructure.Data.Models
         [Required]
         public int TotalPrice { get; set; }
 
-        [Required]
         public ICollection<OrderProducts> Products { get; set; } = new List<OrderProducts>();
-
     }
 }
