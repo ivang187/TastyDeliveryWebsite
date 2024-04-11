@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
 namespace TastyDelivery.Infrastructure.Data.Models
@@ -22,7 +23,16 @@ namespace TastyDelivery.Infrastructure.Data.Models
         public ApplicationUser User { get; set; }
 
         [Required]
-        public int TotalPrice { get; set; }
+        public double TotalPrice { get; set; }
+
+        [Required]
+        public DeliveryStatus Status { get; set; }
+
+        [Required]
+        public int RestaurantId { get; set; }
+
+        [ForeignKey(nameof(RestaurantId))]
+        public Restaurant Restaurant { get; set; }
 
         public ICollection<OrderProducts> Products { get; set; } = new List<OrderProducts>();
     }

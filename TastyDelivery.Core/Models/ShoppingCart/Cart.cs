@@ -9,6 +9,7 @@ namespace TastyDelivery.Core.Models.ShoppingCart
 {
     public class Cart
     {
+        public string RestaurantName { get; set; }
         public List<CartItemViewModel> Products { get; set; } = new List<CartItemViewModel>();
     }
 }

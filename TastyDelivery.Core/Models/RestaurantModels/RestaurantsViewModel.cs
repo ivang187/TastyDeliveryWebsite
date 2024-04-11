@@ -1,4 +1,4 @@
-﻿namespace TastyDelivery.Models
+﻿namespace TastyDelivery.Models.RestaurantModels 
 {
     public class RestaurantsViewModel
     {

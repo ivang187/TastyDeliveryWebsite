@@ -1,5 +1,6 @@
-﻿using TastyDelivery.Core.Models.Restaurant;
+﻿using TastyDelivery.Core.Models.RestaurantModels;
 using TastyDelivery.Models;
+using TastyDelivery.Models.RestaurantModels;
 
 namespace TastyDelivery.Core.Contracts
 {

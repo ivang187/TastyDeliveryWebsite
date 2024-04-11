@@ -21,6 +21,8 @@ namespace TastyDelivery.Core.Models.Order
 
         public string Phone { get; set; }
 
+        public string Restaurant { get; set; }
+
         public ICollection<CartItemViewModel> Products { get; set; } = new List<CartItemViewModel>();   
     }
 }

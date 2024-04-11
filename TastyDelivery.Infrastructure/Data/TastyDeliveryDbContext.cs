@@ -55,6 +55,12 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(o => o.UserId)
             .IsRequired();
 
+        builder.Entity<Order>()
+            .HasOne(r => r.Restaurant)
+            .WithMany(o => o.Orders)
+            .HasForeignKey(o => o.RestaurantId)
+            .IsRequired();
+
         builder.ApplyConfiguration(new RestaurantConfiguration());
         builder.ApplyConfiguration(new ProductConfiguration());
         builder.ApplyConfiguration(new ProductRestaurantsConfiguration());

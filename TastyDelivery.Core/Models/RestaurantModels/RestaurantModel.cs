@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TastyDelivery.Core.Models.Restaurant
+namespace TastyDelivery.Core.Models.RestaurantModels
 {
     public class RestaurantModel
     {

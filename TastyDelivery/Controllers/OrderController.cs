@@ -26,7 +26,7 @@ namespace TastyDelivery.Controllers
         }
         public async Task<IActionResult> Checkout(string cartData)
         {
-            if (!String.IsNullOrEmpty(cartData))
+            if (!string.IsNullOrEmpty(cartData))
             {
                 var user = await GetUser();
 
@@ -49,6 +49,7 @@ namespace TastyDelivery.Controllers
                     LastName = user.LastName,
                     Address = user.HomeAddress,
                     Phone = user.PhoneNumber,
+                    Restaurant = cart.RestaurantName
                 };
 
                 return View(order);
@@ -72,6 +73,7 @@ namespace TastyDelivery.Controllers
                 repository.Update(user);
                 repository.SaveChanges();
             }
+           
 
             return RedirectToAction("CreateOrder", "Order");
         }
@@ -90,11 +92,17 @@ namespace TastyDelivery.Controllers
             return null;
         }
 
-        public async Task<IActionResult> CreateOrder()
-        {
+        [HttpGet]
+        public IActionResult OrderDetails()
+        { 
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> OrderDetail()
+        {
+            return View();
+        }
 
     }
 }

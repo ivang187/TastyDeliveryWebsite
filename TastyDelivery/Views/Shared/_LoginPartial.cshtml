@@ -5,13 +5,13 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@{
-    var user = await UserManager.FindByEmailAsync(User.Identity.Name);
-}
+
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+
         @if (User.IsInRole(AdminConstants.AdminRoleName))
         {
             <li class="nav-item">

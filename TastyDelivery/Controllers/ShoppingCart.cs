@@ -13,12 +13,14 @@ namespace TastyDelivery.Controllers
     {
         private readonly IShoppingCartService shoppingCartService;
         private readonly IRepository repository;
+        private readonly IRestaurantService restaurantService;
 
 
-        public ShoppingCart(IShoppingCartService _shoppingCartService, IRepository _repository) 
+        public ShoppingCart(IShoppingCartService _shoppingCartService, IRepository _repository, IRestaurantService _restaurantService) 
         {
             shoppingCartService = _shoppingCartService;
             repository = _repository;
+            restaurantService = _restaurantService;
         }
 
         public IActionResult GetShoppingCart()
@@ -42,6 +44,7 @@ namespace TastyDelivery.Controllers
         {
             try
             {
+                string restaurantName = await restaurantService.GetRestaurantName(data.GetProperty("restaurantId").GetInt32());
                 int productId = data.GetProperty("productId").GetInt32();
                 double price = data.GetProperty("price").GetDouble();
                 int quantity = data.GetProperty("quantity").GetInt32();
@@ -49,6 +52,8 @@ namespace TastyDelivery.Controllers
                 var model = await shoppingCartService.FindItemToAdd(productId, price, quantity);
 
                 var cart = GetCartSession();
+
+                cart.RestaurantName = restaurantName;
 
                 var existingItem = cart.Products.FirstOrDefault(item => item.Id == model.Id);
 

@@ -1,4 +1,4 @@
-﻿@using TastyDelivery.Core.Models.Restaurant
+﻿@using TastyDelivery.Core.Models.RestaurantModels
 
 @model IEnumerable<RestaurantMenuViewModel>
 
@@ -121,6 +121,7 @@
                 };
 
                 var data = JSON.stringify({
+                    restaurantId: parseInt(restaurantId),
                     productId: parseInt(productId),
                     price: parseFloat(price),
                     quantity: parseInt(quantity)

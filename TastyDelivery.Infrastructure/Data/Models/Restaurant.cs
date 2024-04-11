@@ -26,5 +26,7 @@ namespace TastyDelivery.Infrastructure.Data.Models
         public string Location { get; set; } = string.Empty;
 
         public ICollection<ProductsRestaurants> Products { get; set; } = new List<ProductsRestaurants>();
+
+        public ICollection<Order> Orders { get; set; } = new List<Order>(); 
     }
 }

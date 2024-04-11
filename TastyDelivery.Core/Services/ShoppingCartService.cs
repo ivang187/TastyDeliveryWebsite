@@ -25,7 +25,6 @@ namespace TastyDelivery.Core.Services
                 .Where(p => p.ProductId == id)
                 .Select(p => new CartItemViewModel
                 {
-                    RestaurantName = p.Restaurant.Name,
                     Id = p.ProductId,
                     Name = p.Product.Name,
                     Price = price,

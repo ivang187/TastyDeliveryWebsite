@@ -1,6 +1,6 @@
 ﻿using TastyDelivery.Infrastructure.Data.Models.Enums;
 
-namespace TastyDelivery.Core.Models.Restaurant
+namespace TastyDelivery.Core.Models.RestaurantModels
 {
     public class RestaurantMenuViewModel
     {

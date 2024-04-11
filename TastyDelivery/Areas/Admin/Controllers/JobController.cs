@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TastyDelivery.Areas.Admin.Models;
 using TastyDelivery.Core.Contracts;
-using TastyDelivery.Core.Models.Restaurant;
+using TastyDelivery.Core.Models.RestaurantModels;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
 
