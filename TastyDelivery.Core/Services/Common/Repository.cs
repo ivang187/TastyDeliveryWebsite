@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TastyDelivery.Infrastructure.Data;
+using TastyDelivery.Infrastructure.Data.Models;
 
 namespace TastyDelivery.Core.Services.Common
 {
@@ -20,7 +21,7 @@ namespace TastyDelivery.Core.Services.Common
 
         private DbSet<T> GetDbSet<T>() where T : class
         {
-            return context.Set<T>();
+            return context.Set<T>();    
         }
 
         public IQueryable<T> All<T>() where T : class
@@ -35,12 +36,12 @@ namespace TastyDelivery.Core.Services.Common
 
         public void AddNew<T>(T entity) where T : class
         {
-            GetDbSet<T>().Add(entity);
+            context.Add(entity);
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
-            context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public void Update<T>(T entity) where T : class

@@ -1,10 +1,12 @@
-﻿@using TastyDelivery.Core.Models.Order
+﻿@using Newtonsoft.Json
+@using TastyDelivery.Core.Models.Order
 @using TastyDelivery.Infrastructure.Data.Models.IdentityModels
 
 @model CheckoutViewModel
 
 @{
     ViewBag.Title = "Checkout";
+    var productsJson = JsonConvert.SerializeObject(Model.Products);
 }
 
 <h1>Checkout</h1>
@@ -42,10 +44,14 @@
         </div>
 
         <h2>Cart Summary</h2>
-        <p>Restaurant: @Model.Restaurant</p>
+        <p>Restaurant: @Model.RestaurantName</p>
         <p>Total Items: @Model.Products.Sum(item => item.Quantity) <a href="@Url.Action("GetShoppingCart", "ShoppingCart")" class="btn btn-primary">View Items</a></p>
         <p>Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN</p>
+
+        <input type="hidden" name="ProductsData" id="productsData" />
+        <input type="hidden" name="RestaurantData" id="restaurantData" />
         
+
 
         <h2>Approximate Time for Delivery</h2>
         <p>Estimated time: 35-40 minutes</p>
@@ -62,4 +68,7 @@
         }
         return true;
     }
+
+    document.getElementById('productsData').value = '@Html.Raw(productsJson)';
+    document.getElementById('restaurantData').value = '@Html.Raw(JsonConvert.SerializeObject(Model.Restaurant))';
 </script>

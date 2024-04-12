@@ -3,11 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
+using System.Security.Cryptography.Pkcs;
+using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.Order;
 using TastyDelivery.Core.Models.ShoppingCart;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data;
+using TastyDelivery.Infrastructure.Data.Models;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
 namespace TastyDelivery.Controllers
@@ -15,14 +20,14 @@ namespace TastyDelivery.Controllers
     public class OrderController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly IRepository repository;
-        private readonly TastyDeliveryDbContext teyDeliveryDbContext;
-        
-        public OrderController(UserManager<ApplicationUser> _userManager, IRepository _repository, TastyDeliveryDbContext _teyDeliveryDbContext) 
+        private readonly IRepository repository; 
+        private readonly IOrderService orderService;
+
+        public OrderController(UserManager<ApplicationUser> _userManager, IRepository _repository, IOrderService _orderService) 
         {
             userManager = _userManager;
             repository = _repository;
-            teyDeliveryDbContext = _teyDeliveryDbContext;
+            orderService = _orderService;
         }
         public async Task<IActionResult> Checkout(string cartData)
         {
@@ -44,12 +49,14 @@ namespace TastyDelivery.Controllers
 
                 var order = new CheckoutViewModel
                 {
+                    User = user,
                     Products = products,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Address = user.HomeAddress,
                     Phone = user.PhoneNumber,
-                    Restaurant = cart.RestaurantName
+                    RestaurantName = cart.RestaurantName,
+                    Restaurant = await repository.AllReadOnly<Restaurant>().Where(r => r.Name == cart.RestaurantName).FirstOrDefaultAsync()
                 };
 
                 return View(order);
@@ -58,24 +65,50 @@ namespace TastyDelivery.Controllers
 
             return View();
         }
-        public async Task<IActionResult> UserInfo(string firstName, string lastName, string address, string phone, string saveInfo, bool savePaymentInfo)
+        public async Task<IActionResult> UserInfo(CheckoutViewModel model, string saveInfo, bool savePaymentInfo)
+        {
+            var productsJson = HttpContext.Request.Form["ProductsData"];
+            model.Products = JsonConvert.DeserializeObject<List<CartItemViewModel>>(productsJson);
+
+            var restaurantJson = HttpContext.Request.Form["RestaurantData"];
+            model.Restaurant = JsonConvert.DeserializeObject<Restaurant>(restaurantJson);
+            model.RestaurantName = model.Restaurant.Name;
+
+            CheckSaveInfo(model, saveInfo);
+
+            model.User = await GetUser();
+
+            var orderView = orderService.CreateOrderViewModel(model);
+
+            var order = orderService.CreateOrder(orderView);
+
+            repository.AddNew(order);
+            await repository.SaveChanges();
+
+            return RedirectToAction("OrderDetails", "Order", orderView);
+        }
+
+        public IActionResult OrderDetails(OrderDetailsViewModel model)
+        {
+            return View(model);
+        }
+
+        private async void CheckSaveInfo(CheckoutViewModel model, string saveInfo)
         {
             bool saveInfoBool = saveInfo == "on";
-            var user = await GetUser();
 
             if (saveInfoBool)
             {
-                user.FirstName = firstName;
-                user.LastName = lastName;
-                user.HomeAddress = address;
-                user.PhoneNumber = phone;
+                var user = await GetUser();
+
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.HomeAddress = model.Address;
+                user.PhoneNumber = model.Phone;
 
                 repository.Update(user);
-                repository.SaveChanges();
+                await repository.SaveChanges();
             }
-           
-
-            return RedirectToAction("CreateOrder", "Order");
         }
 
         private async Task<ApplicationUser> GetUser()
@@ -92,17 +125,6 @@ namespace TastyDelivery.Controllers
             return null;
         }
 
-        [HttpGet]
-        public IActionResult OrderDetails()
-        { 
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> OrderDetail()
-        {
-            return View();
-        }
 
     }
 }

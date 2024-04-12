@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
 
 namespace TastyDelivery.Core.Services
 {
@@ -17,7 +18,7 @@ namespace TastyDelivery.Core.Services
         {
             repository = _repository;
         }
-        public async Task<Restaurant> Create(string name, string workingHours, string location)
+        public async Task<Restaurant> CreateRestaurant(string name, string workingHours, string location)
         {
             var model = new Restaurant
             {
@@ -27,6 +28,20 @@ namespace TastyDelivery.Core.Services
             };
 
             return await Task.FromResult(model);
+        }
+
+        public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price)
+        {
+            var product = new Product { Name = name, Description = description, Category = category };
+
+            var model = new ProductsRestaurants
+            {
+                RestaurantId = restaurantId,
+                Product = product,
+                Price = price
+            };
+
+            return model;
         }
 
         public void AddToDb(Restaurant restaurant)

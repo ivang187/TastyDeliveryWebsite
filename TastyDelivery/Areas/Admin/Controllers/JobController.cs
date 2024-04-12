@@ -2,6 +2,7 @@
 using TastyDelivery.Areas.Admin.Models;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.RestaurantModels;
+using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
 
@@ -12,12 +13,14 @@ namespace TastyDelivery.Areas.Admin.Controllers
         private const string Separator = "\r\n";
         private readonly IAdminService adminService;
         private readonly IRestaurantService restaurantService;
-        private readonly IProductService productService;
-        public JobController(IAdminService _adminService, IRestaurantService _restaurantService, IProductService _productService)
+        private readonly IRepository repository;
+        public JobController(IAdminService _adminService,
+            IRestaurantService _restaurantService, 
+            IRepository _repository)
         {
             adminService = _adminService;
             restaurantService = _restaurantService;
-            productService = _productService;
+            repository = _repository;
         }
 
         public IActionResult AddRestaurant()
@@ -28,9 +31,10 @@ namespace TastyDelivery.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRestaurant(AddRestaurantFormViewModel model)
         {
-            var dbModel = await adminService.Create(model.Name, model.WorkingHours, model.Location);
+            var dbModel = await adminService.CreateRestaurant(model.Name, model.WorkingHours, model.Location);
 
-            adminService.AddToDb(dbModel);
+            repository.AddNew(dbModel);
+            await repository.SaveChanges();
 
             return RedirectToAction("Index", "Home");
         }
@@ -65,13 +69,19 @@ namespace TastyDelivery.Areas.Admin.Controllers
 
                     var restaurantName = await restaurantService.GetRestaurantName(restaurantId);
 
-                    var productToCreate = productService.Create(restaurantId, name, description, category, price);
+                    var productToCreate = adminService.CreateProduct(restaurantId, name, description, category, price);
 
-                    productService.AddToDb(productToCreate);
+                    repository.AddNew(productToCreate);
+                    await repository.SaveChanges();
                 }
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AppointDriver()
+        {
+            return View();
         }
 
         public IActionResult ToWebsite()

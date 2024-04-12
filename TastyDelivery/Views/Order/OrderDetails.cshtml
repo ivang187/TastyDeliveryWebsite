@@ -1,1 +1,60 @@
-﻿
+﻿@using TastyDelivery.Core.Models.Order
+@model OrderDetailsViewModel
+
+@{
+    ViewBag.Title = "My Orders";
+}
+
+@if (Model != null && Model.Products.Any())
+{
+    <div>
+        <h2>Delivery Information</h2>
+        <p><strong>Full Name:</strong> @Model.FullName</p>
+        <p><strong>Address:</strong> @Model.Address</p>
+        <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
+    </div>
+
+    <div>
+        <h2>Order Summary</h2>
+        <p><strong>Restaurant Name:</strong> @Model.RestaurantName</p>
+        <p><strong>Total Price:</strong> @Model.TotalPrice.ToString("0.00") BGN</p>
+        <p><strong>Status:</strong> @Model.Status</p>
+        <p><strong>Created:</strong> @Model.CreatedOrder.ToString("yyyy-MM-dd HH:mm:ss")</p>
+        <p><strong>Expected Delivery:</strong> @Model.CreatedOrder.AddMinutes(40).ToString("yyyy-MM-dd HH:mm:ss")</p>
+    </div>
+
+    <div>
+        <h2>Ordered Products</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Quantity</td>
+                        <td>@product.Price.ToString("0.00") BGN</td>
+                        <td>@(product.Price * product.Quantity).ToString("0.00") BGN</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div>
+        <p>You have no orders.</p>
+    </div>
+}
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Return to Home</a>
+</div>
