@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TastyDelivery.Areas.Admin.Models;
 using TastyDelivery.Core.Contracts;
+using TastyDelivery.Core.Models.AdminModels;
 using TastyDelivery.Core.Models.RestaurantModels;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
@@ -79,9 +79,17 @@ namespace TastyDelivery.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
         public IActionResult AppointDriver()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult AppointDriver(AppointDriverModel model)
+        {
+            adminService.CreateDriver(model);
+            return RedirectToAction("Index", "Home");   
         }
 
         public IActionResult ToWebsite()

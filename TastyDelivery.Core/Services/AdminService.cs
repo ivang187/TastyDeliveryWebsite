@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TastyDelivery.Core.Models.AdminModels;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
+using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace TastyDelivery.Core.Services
 {
@@ -44,12 +48,55 @@ namespace TastyDelivery.Core.Services
             return model;
         }
 
-        public void AddToDb(Restaurant restaurant)
+        public void CreateDriver(AppointDriverModel model)
         {
-            repository.AddNew(restaurant);
+            var user = FindUserByEmail(model.Email);
+
+            if (user == null)
+            {
+                user = CreateNewDriver(model);
+                repository.AddNew(user);
+            }
+            else
+            {
+                user.Role = UserRole.DeliveryMan;
+                user.HomeAddress = null;
+                repository.Update(user);
+            }
+
             repository.SaveChanges();
         }
 
+        private ApplicationUser FindUserByEmail(string email)
+        {
+            var userEmail = repository.AllReadOnly<ApplicationUser>().Where(u => u.Email == email).Select(u => u.Email).FirstOrDefault();
 
+            if(userEmail == null)
+            {
+                return null;
+            }
+
+            return repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Email == userEmail);
+        }
+
+        private ApplicationUser CreateNewDriver(AppointDriverModel model)
+        {
+            var user = new ApplicationUser
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Role = UserRole.DeliveryMan,
+                UserName = model.Email,
+                NormalizedEmail = model.Email.ToUpper(),
+                NormalizedUserName = model.Email.ToUpper()
+            };
+
+            var passwordHasher = new PasswordHasher<ApplicationUser>();
+            user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
+
+            return user;
+        }
     }
 }

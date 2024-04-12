@@ -1,4 +1,4 @@
-﻿namespace TastyDelivery.Areas.Admin.Models
+﻿namespace TastyDelivery.Core.Models.AdminModels
 {
     public class AddRestaurantFormViewModel
     {

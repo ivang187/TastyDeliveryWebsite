@@ -1,4 +1,4 @@
-﻿@using TastyDelivery.Areas.Admin.Models
+﻿@using TastyDelivery.Core.Models.AdminModels
 @model AppointDriverModel
 @{
     ViewData["Title"] = "Appoint New Driver";
@@ -23,7 +23,7 @@
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ConfirmPassword">Password:</label>
+        <label asp-for="ConfirmPassword">Confirm Password:</label>
         <input asp-for="ConfirmPassword" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
