@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +30,10 @@ namespace TastyDelivery.Infrastructure.Data.Models.IdentityModels
 
         public virtual UserRole Role { get; set; }
 
+        [Required]
+        public int OrderCount { get; set; }
+
         public ICollection<Order> Orders { get; set; } = new List<Order>();
+
     }
 }

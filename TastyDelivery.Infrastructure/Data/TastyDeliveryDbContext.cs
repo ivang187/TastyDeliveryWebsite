@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json;
 using System.Reflection.Emit;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
@@ -50,10 +51,10 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
         builder.Entity<Order>()
-            .HasOne(o => o.User)
-            .WithMany(u => u.Orders)
-            .HasForeignKey(o => o.UserId)
-            .IsRequired();
+          .HasOne(o => o.User)
+        .WithMany(u => u.Orders)
+        .HasForeignKey(o => o.UserId)
+        .IsRequired();
 
         builder.Entity<Order>()
             .HasOne(r => r.Restaurant)

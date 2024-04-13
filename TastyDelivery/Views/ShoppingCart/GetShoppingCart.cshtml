@@ -8,13 +8,9 @@
 
 <h1>Cart</h1>
 
-@if (!string.IsNullOrEmpty(Model.RestaurantName))
-{
-    <h2>Restaurant: @Model.RestaurantName</h2>
-}
-
 @if (Model != null && Model.Products.Count > 0)
 {
+    <h2>Restaurant: @Model.RestaurantName</h2>
         <table class="table">
             <thead>
                 <tr>

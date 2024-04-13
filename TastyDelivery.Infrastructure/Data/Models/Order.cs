@@ -4,12 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
+using System.Runtime.Serialization;
 
 namespace TastyDelivery.Infrastructure.Data.Models
 {
+    [Serializable]
     public class Order
     {
         [Key]
@@ -21,6 +24,9 @@ namespace TastyDelivery.Infrastructure.Data.Models
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
+
+        [Required]
+        public string HomeAddress { get; set; } = string.Empty;
 
         [Required]
         public double TotalPrice { get; set; }

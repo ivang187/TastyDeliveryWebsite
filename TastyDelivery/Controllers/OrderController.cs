@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.WebSockets;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.Pkcs;
@@ -23,7 +24,9 @@ namespace TastyDelivery.Controllers
         private readonly IRepository repository; 
         private readonly IOrderService orderService;
 
-        public OrderController(UserManager<ApplicationUser> _userManager, IRepository _repository, IOrderService _orderService) 
+        public OrderController(UserManager<ApplicationUser> _userManager, 
+            IRepository _repository, 
+            IOrderService _orderService) 
         {
             userManager = _userManager;
             repository = _repository;
@@ -78,19 +81,25 @@ namespace TastyDelivery.Controllers
 
             model.User = await GetUser();
 
-            var orderView = orderService.CreateOrderViewModel(model);
-
-            var order = orderService.CreateOrder(orderView);
+            var order = orderService.CreateOrder(model);
 
             repository.AddNew(order);
             await repository.SaveChanges();
 
-            return RedirectToAction("OrderDetails", "Order", orderView);
+            foreach(var item in order.User.Orders)
+            {
+                Console.WriteLine($"Order ID: {item.Id}");
+            }
+
+            return RedirectToAction("OrderDetails", "Order");
         }
 
-        public IActionResult OrderDetails(OrderDetailsViewModel model)
+        public async Task<IActionResult> OrderDetails()
         {
-            return View(model);
+            var user = await GetUser();
+            var myOrders = orderService.GetUserOrders(user);
+
+            return View(myOrders);
         }
 
         private async void CheckSaveInfo(CheckoutViewModel model, string saveInfo)

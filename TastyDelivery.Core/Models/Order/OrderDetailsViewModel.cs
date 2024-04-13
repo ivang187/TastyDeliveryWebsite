@@ -29,7 +29,7 @@ namespace TastyDelivery.Core.Models.Order
 
         public DeliveryStatus Status { get; set; }
 
-        public DateTime CreatedOrder { get; } = DateTime.Now;
+        public DateTime CreatedOrder { get; set; }
 
         public DateTime ExpectedDelivery { get; set; }
     }

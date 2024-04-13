@@ -25,6 +25,9 @@ namespace TastyDelivery.Infrastructure.Data.Models
         [MinLength(AppConstants.RestaurantLocationMinLength)]
         public string Location { get; set; } = string.Empty;
 
+        [Required]
+        public int OrderCount { get; set; }
+
         public ICollection<ProductsRestaurants> Products { get; set; } = new List<ProductsRestaurants>();
 
         public ICollection<Order> Orders { get; set; } = new List<Order>(); 
