@@ -39,9 +39,9 @@ namespace TastyDelivery.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> AddMenu()
+        public IActionResult AddMenu()
         {
-            var model = await restaurantService.GetAllRestaurants();
+            var model = restaurantService.GetAllRestaurants();
 
             var modelToPass = model.Select(r => new RestaurantModel
             {
@@ -67,7 +67,7 @@ namespace TastyDelivery.Areas.Admin.Controllers
                     Enum.TryParse(items[2], true, out ProductCategory category);
                     double price = double.Parse(items[3]);
 
-                    var restaurantName = await restaurantService.GetRestaurantName(restaurantId);
+                    var restaurantName = restaurantService.GetRestaurantName(restaurantId);
 
                     var productToCreate = adminService.CreateProduct(restaurantId, name, description, category, price);
 
@@ -86,9 +86,9 @@ namespace TastyDelivery.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AppointDriver(AppointDriverModel model)
+        public async Task<IActionResult> AppointDriver(AppointDriverModel model)
         {
-            adminService.CreateDriver(model);
+            await adminService.CreateDriver(model);
             return RedirectToAction("Index", "Home");   
         }
 

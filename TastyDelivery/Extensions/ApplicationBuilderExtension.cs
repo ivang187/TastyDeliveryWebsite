@@ -22,11 +22,13 @@ namespace TastyDelivery.Extensions
             {
                 var adminUser = await userManager.FindByEmailAsync("ivang187@gmail.com");
 
-                if (adminUser.Role == UserRole.Admin)
+                if(adminUser.Role == UserRole.Admin)
                 {
                     return;
                 }
 
+                var getRoles = await userManager.GetRolesAsync(adminUser);
+                var removeRoles = await userManager.RemoveFromRolesAsync(adminUser, getRoles);
                 var addToRoleResult = await userManager.AddToRoleAsync(adminUser, UserRole.Admin.ToString());
 
                 if (addToRoleResult.Succeeded)

@@ -9,6 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TastyDelivery.Core", "Tasty
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TastyDelivery.Infrastructure", "TastyDelivery.Infrastructure\TastyDelivery.Infrastructure.csproj", "{579C5CF8-1405-4A47-9819-E58BE3DB5650}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TastyDelivery.Tests", "TastyDelivery.Tests\TastyDelivery.Tests.csproj", "{71F119E4-D107-46A1-A77C-C7C3506F5079}"
+	ProjectSection(ProjectDependencies) = postProject
+		{579C5CF8-1405-4A47-9819-E58BE3DB5650} = {579C5CF8-1405-4A47-9819-E58BE3DB5650}
+		{CDF5FE66-8246-4704-84D9-BBDFEB51B9BA} = {CDF5FE66-8246-4704-84D9-BBDFEB51B9BA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +33,10 @@ Global
 		{579C5CF8-1405-4A47-9819-E58BE3DB5650}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{579C5CF8-1405-4A47-9819-E58BE3DB5650}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{579C5CF8-1405-4A47-9819-E58BE3DB5650}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71F119E4-D107-46A1-A77C-C7C3506F5079}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F119E4-D107-46A1-A77C-C7C3506F5079}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71F119E4-D107-46A1-A77C-C7C3506F5079}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71F119E4-D107-46A1-A77C-C7C3506F5079}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

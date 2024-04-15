@@ -83,14 +83,6 @@ namespace TastyDelivery.Controllers
 
             var order = orderService.CreateOrder(model);
 
-            repository.AddNew(order);
-            await repository.SaveChanges();
-
-            foreach(var item in order.User.Orders)
-            {
-                Console.WriteLine($"Order ID: {item.Id}");
-            }
-
             return RedirectToAction("OrderDetails", "Order");
         }
 

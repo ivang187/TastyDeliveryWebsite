@@ -28,10 +28,7 @@ namespace TastyDelivery.Infrastructure.Data.Models.IdentityModels
         [MinLength(UsersConstants.AddressNameMinLength)]
         public string HomeAddress { get; set; } = string.Empty;
 
-        public virtual UserRole Role { get; set; }
-
-        [Required]
-        public int OrderCount { get; set; }
+        public UserRole Role { get; set; }
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
 

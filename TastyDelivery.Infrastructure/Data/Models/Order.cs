@@ -12,7 +12,6 @@ using System.Runtime.Serialization;
 
 namespace TastyDelivery.Infrastructure.Data.Models
 {
-    [Serializable]
     public class Order
     {
         [Key]
@@ -39,6 +38,12 @@ namespace TastyDelivery.Infrastructure.Data.Models
 
         [ForeignKey(nameof(RestaurantId))]
         public Restaurant Restaurant { get; set; }
+
+        [Required]
+        public string DeliveryManId { get; set; }
+
+        [ForeignKey(nameof(DeliveryManId))]
+        public ApplicationUser DeliveryMan { get; set; }
 
         public ICollection<OrderProducts> Products { get; set; } = new List<OrderProducts>();
     }

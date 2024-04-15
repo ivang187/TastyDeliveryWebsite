@@ -13,17 +13,17 @@ namespace TastyDelivery.Controllers
         {
             _restaurantService = restaurantService;
         }
-        public async Task<IActionResult> Restaurants()
+        public IActionResult Restaurants()
         {
-            var model = await _restaurantService.GetAllRestaurants();
+            var model = _restaurantService.GetAllRestaurants();
 
             return View(model);
         }
 
-        public async Task<IActionResult> ShowMenu(int id)
+        public IActionResult ShowMenu(int id)
         {
-            var model = await _restaurantService.GetRestaurantMenu(id);
-            var restaurantName = await _restaurantService.GetRestaurantName(id);
+            var model = _restaurantService.GetRestaurantMenu(id);
+            var restaurantName = _restaurantService.GetRestaurantName(id);
 
             if(model == null)
             {

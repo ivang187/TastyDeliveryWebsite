@@ -5,49 +5,48 @@
     ViewBag.Title = "My Orders";
 }
 
-@if (Model != null)
+@if (Model != null && Model.Any())
 {
-    @foreach(var order in Model)
+    @foreach (var order in Model)
     {
-        <div>
-            <h2>Delivery Information</h2>
-            <p><strong>Full Name:</strong> @order.FullName</p>
-            <p><strong>Address:</strong> @order.Address</p>
-            <p><strong>Phone Number:</strong> @order.PhoneNumber</p>
-        </div>
+        <div class="order-container">
+            <h2>Order ID: @order.OrderId</h2>
+            <div class="delivery-info">
+                <h2>Delivery Information</h2>
+                <p><strong>Full Name:</strong> @order.FullName</p>
+                <p><strong>Address:</strong> @order.Address</p>
+                <p><strong>Phone Number:</strong> @order.PhoneNumber</p>
+            </div>
 
-        <div>
-            <h2>Order Summary</h2>
-            <p><strong>Restaurant Name:</strong> @order.RestaurantName</p>
-            <p><strong>Total Price:</strong> @order.TotalPrice.ToString("0.00") BGN</p>
-            <p><strong>Status:</strong> @order.Status</p>
-            <p><strong>Created:</strong> @order.CreatedOrder.ToString("yyyy-MM-dd HH:mm:ss")</p>
-            <p><strong>Expected Delivery:</strong> @order.CreatedOrder.AddMinutes(40).ToString("yyyy-MM-dd HH:mm:ss")</p>
-        </div>
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <p><strong>Restaurant Name:</strong> @order.RestaurantName</p>
+                <p><strong>Total Price:</strong> @order.TotalPrice.ToString("0.00") BGN</p>
+                <p><strong>Status:</strong> @order.Status</p>
+                <p><strong>Created:</strong> @order.CreatedOrder.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                <p><strong>Expected Delivery:</strong> @order.CreatedOrder.AddMinutes(40).ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
 
-        <div>
-            <h2>Ordered Products</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var product in order.Products)
-                    {
+            <div class="ordered-products">
+                <h2>Ordered Products</h2>
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@product.Name</td>
+                            <th>Product Name</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in order.Products)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     }
-
 }
 else
 {
@@ -59,3 +58,19 @@ else
 <div>
     <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Return to Home</a>
 </div>
+
+<style>
+    .order-container {
+        border: 1px solid #ccc;
+        border-radius: 5px; 
+        padding: 20px; 
+        margin-bottom: 20px; 
+        width: 400px;
+        height: 700px;
+        overflow: hidden; 
+        box-sizing: border-box;
+        float: left; 
+        margin-right: 20px; 
+    }
+</style>
+

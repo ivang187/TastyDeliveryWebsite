@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using TastyDelivery.Areas.Admin;
 using TastyDelivery.Core.Contracts;
+using TastyDelivery.Extensions;
+using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
+using TastyDelivery.Infrastructure.Utilities.Constants;
 using TastyDelivery.Models;
 
 namespace TastyDelivery.Controllers
@@ -11,7 +16,8 @@ namespace TastyDelivery.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IRestaurantService _restaurantService;
 
-        public HomeController(ILogger<HomeController> logger, IRestaurantService restaurantService)
+        public HomeController(ILogger<HomeController> logger,
+            IRestaurantService restaurantService)
         {
             _logger = logger;
             _restaurantService = restaurantService;
@@ -19,13 +25,16 @@ namespace TastyDelivery.Controllers
 
         public IActionResult Index()
         {
-
-            if (User.IsInRole(AdminConstants.AdminRoleName))
+            if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home", new {area = "Admin"});
-            }
-            if(User.Identity.IsAuthenticated)
-            {
+                if (User.IsInRole(AdminConstants.AdminRoleName))
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                }
+                if(User.IsInRole(UsersConstants.DeliveryManRoleName))
+                {
+                    return RedirectToAction("Index", "DeliveryMan");
+                }
                 return RedirectToAction("Restaurants", "Restaurant");
             }
 

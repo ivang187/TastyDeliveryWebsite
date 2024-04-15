@@ -23,16 +23,16 @@ namespace TastyDelivery.Core.Services
             repository = _repository;
         }
 
-        public async Task<string> GetRestaurantName(int id)
+        public string GetRestaurantName(int id)
         {
-            return await repository.AllReadOnly<Restaurant>()
+            return repository.AllReadOnly<Restaurant>()
                 .Where(r => r.Id == id)
-                .Select(x => x.Name).FirstOrDefaultAsync();
+                .Select(x => x.Name).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<RestaurantsViewModel>> GetAllRestaurants()
+        public IEnumerable<RestaurantsViewModel> GetAllRestaurants()
         {
-            return await repository.AllReadOnly<Restaurant>()
+            return repository.AllReadOnly<Restaurant>()
                 .Select(r => new RestaurantsViewModel
                 {
                     Id = r.Id,
@@ -40,12 +40,12 @@ namespace TastyDelivery.Core.Services
                     Location = r.Location,
                     WorkingHours = r.WorkingHours
                 })
-                .ToListAsync();
+                .ToList();
         }
 
-        public async Task<IEnumerable<RestaurantMenuViewModel>> GetRestaurantMenu(int id)
+        public IEnumerable<RestaurantMenuViewModel> GetRestaurantMenu(int id)
         {
-            return await repository.AllReadOnly<ProductsRestaurants>()
+            return repository.AllReadOnly<ProductsRestaurants>()
                 .Where(r => r.RestaurantId == id)
                 .Select(pr => new RestaurantMenuViewModel
                 {
@@ -57,7 +57,7 @@ namespace TastyDelivery.Core.Services
                     Price = pr.Price,
                     Category = pr.Product.Category
                 })
-                .ToListAsync();
+                .ToList();
         }
     }
 }

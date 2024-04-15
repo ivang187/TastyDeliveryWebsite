@@ -12,9 +12,20 @@ namespace TastyDelivery.Infrastructure.Data;
 
 public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
 {
-    public TastyDeliveryDbContext(DbContextOptions<TastyDeliveryDbContext> options)
+    private bool _seedDb;
+    public TastyDeliveryDbContext(DbContextOptions<TastyDeliveryDbContext> options, bool seed = true)
         : base(options)
     {
+        if (Database.IsRelational())
+        {
+            Database.Migrate();
+        }
+        else
+        {
+            Database.EnsureCreated();
+        }
+
+        _seedDb = seed;
     }
 
     public DbSet<Restaurant> Restaurants { get; set; } = null!;
@@ -62,9 +73,13 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(o => o.RestaurantId)
             .IsRequired();
 
-        builder.ApplyConfiguration(new RestaurantConfiguration());
-        builder.ApplyConfiguration(new ProductConfiguration());
-        builder.ApplyConfiguration(new ProductRestaurantsConfiguration());
+        if (_seedDb)
+        {
+            builder.ApplyConfiguration(new RestaurantConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new ProductRestaurantsConfiguration());
+        }
+
         base.OnModelCreating(builder);
     }
 }

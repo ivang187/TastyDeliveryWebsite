@@ -9,6 +9,8 @@ namespace TastyDelivery.Infrastructure.Utilities.Constants
 {
     public class UsersConstants
     {
+        public const string DeliveryManRoleName = "DeliveryMan";
+        public const string CustomerRoleName = "Customer";
         public const int UserFirstNameMinLength = 1;
         public const int UserFirstNameMaxLength = 50;
 

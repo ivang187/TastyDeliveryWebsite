@@ -6,9 +6,9 @@ namespace TastyDelivery.Core.Contracts
 {
     public interface IRestaurantService
     {
-        public Task<string> GetRestaurantName(int id);
-        public Task<IEnumerable<RestaurantsViewModel>> GetAllRestaurants();
+        public string GetRestaurantName(int id);
+        public IEnumerable<RestaurantsViewModel> GetAllRestaurants();
 
-        public Task<IEnumerable<RestaurantMenuViewModel>> GetRestaurantMenu(int id);
+        public IEnumerable<RestaurantMenuViewModel> GetRestaurantMenu(int id);
     }
 }

@@ -11,16 +11,19 @@ using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace TastyDelivery.Core.Services
 {
     public class AdminService : IAdminService
     {
         private readonly IRepository repository;
+        private readonly UserManager<ApplicationUser> userManager;
         
-        public AdminService(IRepository _repository) 
+        public AdminService(IRepository _repository, UserManager<ApplicationUser> _userManager) 
         {
             repository = _repository;
+            userManager = _userManager;
         }
         public async Task<Restaurant> CreateRestaurant(string name, string workingHours, string location)
         {
@@ -48,7 +51,7 @@ namespace TastyDelivery.Core.Services
             return model;
         }
 
-        public void CreateDriver(AppointDriverModel model)
+        public async Task CreateDriver(AppointDriverModel model)
         {
             var user = FindUserByEmail(model.Email);
 
@@ -64,7 +67,21 @@ namespace TastyDelivery.Core.Services
                 repository.Update(user);
             }
 
-            repository.SaveChanges();
+            await UpdateUserRole(user);
+            await repository.SaveChanges();
+        }
+
+        private async Task UpdateUserRole(ApplicationUser user)
+        {
+            var existingRoles = await userManager.GetRolesAsync(user);
+            var removeFromRoles = await userManager.RemoveFromRolesAsync(user, existingRoles);
+
+            var addToRoleResult = await userManager.AddToRoleAsync(user, UserRole.DeliveryMan.ToString());
+
+            if (addToRoleResult.Succeeded)
+            {
+                Console.WriteLine($"Successfully created role for User: {user.FirstName} New role: {string.Join(" ", await userManager.GetRolesAsync(user))}");
+            }
         }
 
         private ApplicationUser FindUserByEmail(string email)
@@ -95,6 +112,8 @@ namespace TastyDelivery.Core.Services
 
             var passwordHasher = new PasswordHasher<ApplicationUser>();
             user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
+
+            userManager.CreateAsync(user);
 
             return user;
         }

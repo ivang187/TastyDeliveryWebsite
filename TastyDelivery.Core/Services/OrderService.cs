@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
@@ -15,13 +16,11 @@ namespace TastyDelivery.Core.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IRepository repository;
-        private readonly UserManager<ApplicationUser> userManager;
+        private IRepository repository;
 
-        public OrderService(IRepository _repository, UserManager<ApplicationUser> _userManager)
+        public OrderService(IRepository repository)
         {
-            repository = _repository;
-            userManager = _userManager;
+            this.repository = repository;
         }
 
         public Order CreateOrder(CheckoutViewModel model)
@@ -43,24 +42,10 @@ namespace TastyDelivery.Core.Services
                     .ToList()
             };
 
-            AddToOrderCount(order);
+            repository.AddNew(order);
+            repository.SaveChanges();
 
             return order;
-        }
-
-        private void AddToOrderCount(Order order)
-        {        
-            var restaurant = repository.AllReadOnly<Restaurant>().Where(r => r.Id == order.RestaurantId).FirstOrDefault();
-            var user = order.User;
-
-            user.Orders.Add(order);
-            restaurant.Orders.Add(order);
-
-            user.OrderCount += 1;
-            restaurant.OrderCount += 1;
-
-            repository.Update(user);
-            repository.Update(restaurant);
         }
 
         public List<OrderDetailsViewModel> GetUserOrders(ApplicationUser user)
@@ -91,6 +76,8 @@ namespace TastyDelivery.Core.Services
 
         private OrderDetailsViewModel CreateOrderViewModel(Order order, ApplicationUser user)
         {
+            var dateNow = DateTime.Now;
+
             var model = new OrderDetailsViewModel
             {
                 OrderId = order.Id,
@@ -105,6 +92,8 @@ namespace TastyDelivery.Core.Services
                 }).ToList(),
                 TotalPrice = order.TotalPrice,
                 Status = order.Status,
+                CreatedOrder = dateNow,
+                ExpectedDelivery = dateNow.AddMinutes(40),
                 RestaurantName = repository.AllReadOnly<Restaurant>().Where(r => r.Id == order.RestaurantId).Select(r => r.Name).FirstOrDefault(),
                 Restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Id == order.RestaurantId),
             };
