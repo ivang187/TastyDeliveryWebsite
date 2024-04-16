@@ -1,0 +1,40 @@
+﻿@using TastyDelivery.Core.Models.DeliveryManModels
+@model List<AssignedOrdersViewModel>
+
+<div class="container">
+    @if (Model != null && Model.Any())
+    {
+        <h2>Assigned Orders</h2>
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Order ID: @order.OrderId</h5>
+                            <p class="card-text">User: @order.UserFullName</p>
+                            <p class="card-text">Delivery Address: @order.Address</p>
+                            <p class="card-text">Phone Number: @order.PhoneNumber</p>
+                            <p class="card-text">Time Ordered: @order.OrderTaken</p>
+                            <p class="card-text">Expected Delivery: @order.ExpectedDelivery</p>
+                            <p class="card-text">Assigned To: @order.DeliveryManFullName</p>
+                            <p class="card-text">Restaurant: @order.RestaurantName</p>
+                            <p class="card-text">Products:</p>
+                            <ul class="list-group">
+                                @foreach (var product in order.Products)
+                                {
+                                    <li class="list-group-item">@product.Name</li>
+                                }
+                            </ul>
+                            <a href="@Url.Action("OrderDelivered", "DeliveryMan")" class="btn btn-primary mt-3">Order Delivered</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <h2>You have no orders assigned.</h2>
+    }
+</div>

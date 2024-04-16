@@ -15,8 +15,9 @@ namespace TastyDelivery.Controllers
         private readonly IRepository repository;
         private readonly IRestaurantService restaurantService;
 
-
-        public ShoppingCart(IShoppingCartService _shoppingCartService, IRepository _repository, IRestaurantService _restaurantService) 
+        public ShoppingCart(IShoppingCartService _shoppingCartService,
+            IRepository _repository, 
+            IRestaurantService _restaurantService) 
         {
             shoppingCartService = _shoppingCartService;
             repository = _repository;
@@ -44,7 +45,7 @@ namespace TastyDelivery.Controllers
         {
             try
             {
-                string restaurantName = await restaurantService.GetRestaurantName(data.GetProperty("restaurantId").GetInt32());
+                string restaurantName = restaurantService.GetRestaurantName(data.GetProperty("restaurantId").GetInt32());
                 int productId = data.GetProperty("productId").GetInt32();
                 double price = data.GetProperty("price").GetDouble();
                 int quantity = data.GetProperty("quantity").GetInt32();

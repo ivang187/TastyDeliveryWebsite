@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using TastyDelivery.Core.Contracts;
-using TastyDelivery.Core.Models.Order;
+using TastyDelivery.Core.Models.OrderModels;
 using TastyDelivery.Core.Models.ShoppingCart;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
@@ -18,19 +18,21 @@ namespace TastyDelivery.Core.Services
     {
         private IRepository repository;
 
-        public OrderService(IRepository repository)
+        public OrderService(IRepository _repository)
         {
-            this.repository = repository;
+            repository = _repository;
         }
 
-        public Order CreateOrder(CheckoutViewModel model)
+        public async Task<Order> CreateOrder(CheckoutViewModel model)
         {
             var order = new Order
             {
                 User = model.User,
                 UserId = model.User.Id,
                 HomeAddress = model.Address,
+                PhoneNumber = model.Phone,
                 TotalPrice = model.Products.Sum(p => p.Price * p.Quantity),
+                TimeOrdered = DateTime.Now,
                 Status = DeliveryStatus.Pending,
                 RestaurantId = repository.AllReadOnly<Restaurant>().Where(r => r.Id == model.Restaurant.Id).Select(r => r.Id).FirstOrDefault(),
                 Products = model.Products
@@ -42,8 +44,7 @@ namespace TastyDelivery.Core.Services
                     .ToList()
             };
 
-            repository.AddNew(order);
-            repository.SaveChanges();
+            await SaveChangesToDb(order);
 
             return order;
         }
@@ -76,15 +77,13 @@ namespace TastyDelivery.Core.Services
 
         private OrderDetailsViewModel CreateOrderViewModel(Order order, ApplicationUser user)
         {
-            var dateNow = DateTime.Now;
-
-            var model = new OrderDetailsViewModel
+            return new OrderDetailsViewModel
             {
                 OrderId = order.Id,
                 FullName = user.FirstName + ' ' + user.LastName,
                 User = user,
                 Address = order.HomeAddress,
-                PhoneNumber = user.PhoneNumber,
+                PhoneNumber = order.PhoneNumber,
                 Products = order.Products.Select(p => new CartItemViewModel
                 {
                     Id = p.ProductId,
@@ -92,13 +91,17 @@ namespace TastyDelivery.Core.Services
                 }).ToList(),
                 TotalPrice = order.TotalPrice,
                 Status = order.Status,
-                CreatedOrder = dateNow,
-                ExpectedDelivery = dateNow.AddMinutes(40),
+                CreatedOrder = order.TimeOrdered,
+                ExpectedDelivery = order.TimeOrdered.AddMinutes(40),
                 RestaurantName = repository.AllReadOnly<Restaurant>().Where(r => r.Id == order.RestaurantId).Select(r => r.Name).FirstOrDefault(),
                 Restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Id == order.RestaurantId),
             };
+        }
 
-            return model;
+        private async Task SaveChangesToDb(Order order)
+        {
+            repository.AddNew(order);
+            await repository.SaveChanges();
         }
     }
 }

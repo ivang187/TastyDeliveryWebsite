@@ -8,7 +8,7 @@ using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
-namespace TastyDelivery.Core.Models.Order
+namespace TastyDelivery.Core.Models.OrderModels
 {
     public class OrderDetailsViewModel
     {

@@ -28,6 +28,9 @@ namespace TastyDelivery.Infrastructure.Data.Models
         public string HomeAddress { get; set; } = string.Empty;
 
         [Required]
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        [Required]
         public double TotalPrice { get; set; }
 
         [Required]
@@ -39,11 +42,15 @@ namespace TastyDelivery.Infrastructure.Data.Models
         [ForeignKey(nameof(RestaurantId))]
         public Restaurant Restaurant { get; set; }
 
-        [Required]
         public string DeliveryManId { get; set; }
 
         [ForeignKey(nameof(DeliveryManId))]
         public ApplicationUser DeliveryMan { get; set; }
+
+        [Required]
+        public DateTime TimeOrdered { get; set; }
+
+        public DateTime TimeDelivered { get; set; }
 
         public ICollection<OrderProducts> Products { get; set; } = new List<OrderProducts>();
     }

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography.Pkcs;
 using TastyDelivery.Core.Contracts;
-using TastyDelivery.Core.Models.Order;
+using TastyDelivery.Core.Models.OrderModels;
 using TastyDelivery.Core.Models.ShoppingCart;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data;
@@ -76,12 +76,12 @@ namespace TastyDelivery.Controllers
             var restaurantJson = HttpContext.Request.Form["RestaurantData"];
             model.Restaurant = JsonConvert.DeserializeObject<Restaurant>(restaurantJson);
             model.RestaurantName = model.Restaurant.Name;
-
-            CheckSaveInfo(model, saveInfo);
-
             model.User = await GetUser();
 
-            var order = orderService.CreateOrder(model);
+            CheckSaveInfo(model, saveInfo, model.User);
+
+            var order = await orderService.CreateOrder(model);
+            HttpContext.Session.Remove($"Cart_{User.FindFirst(ClaimTypes.NameIdentifier)?.Value}");
 
             return RedirectToAction("OrderDetails", "Order");
         }
@@ -94,21 +94,18 @@ namespace TastyDelivery.Controllers
             return View(myOrders);
         }
 
-        private async void CheckSaveInfo(CheckoutViewModel model, string saveInfo)
+        private void CheckSaveInfo(CheckoutViewModel model, string saveInfo, ApplicationUser user)
         {
             bool saveInfoBool = saveInfo == "on";
 
             if (saveInfoBool)
             {
-                var user = await GetUser();
-
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.HomeAddress = model.Address;
                 user.PhoneNumber = model.Phone;
 
                 repository.Update(user);
-                await repository.SaveChanges();
             }
         }
 

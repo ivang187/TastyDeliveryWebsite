@@ -29,12 +29,12 @@ namespace TastyDelivery.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRestaurant(AddRestaurantFormViewModel model)
+        public IActionResult CreateRestaurant(AddRestaurantFormViewModel model)
         {
-            var dbModel = await adminService.CreateRestaurant(model.Name, model.WorkingHours, model.Location);
+            var dbModel = adminService.CreateRestaurant(model.Name, model.WorkingHours, model.Location);
 
             repository.AddNew(dbModel);
-            await repository.SaveChanges();
+            repository.SaveChanges();
 
             return RedirectToAction("Index", "Home");
         }

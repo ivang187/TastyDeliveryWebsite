@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TastyDelivery.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using TastyDelivery.Infrastructure.Data;
 namespace TastyDelivery.Infrastructure.Migrations
 {
     [DbContext(typeof(TastyDeliveryDbContext))]
-    partial class TastyDeliveryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416124358_OrderAddedTime")]
+    partial class OrderAddedTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,13 +253,10 @@ namespace TastyDelivery.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DeliveryManId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("HomeAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -724,7 +724,9 @@ namespace TastyDelivery.Infrastructure.Migrations
                 {
                     b.HasOne("TastyDelivery.Infrastructure.Data.Models.IdentityModels.ApplicationUser", "DeliveryMan")
                         .WithMany()
-                        .HasForeignKey("DeliveryManId");
+                        .HasForeignKey("DeliveryManId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TastyDelivery.Infrastructure.Data.Models.Restaurant", "Restaurant")
                         .WithMany("Orders")

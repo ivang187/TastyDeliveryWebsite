@@ -1,1 +1,13 @@
-﻿
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@using TastyDelivery.Core.Models.DeliveryManModels
+@using TastyDelivery.Infrastructure.Data.Models.IdentityModels
+
+@inject UserManager<ApplicationUser> UserManager;
+
+@{
+    ViewData["Title"] = "Delivery Person Home";
+    var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+}
+
+<h1>Welcome, @user.FirstName</h1>

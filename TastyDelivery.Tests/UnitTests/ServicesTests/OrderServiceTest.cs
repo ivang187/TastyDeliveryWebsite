@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TastyDelivery.Core.Contracts;
-using TastyDelivery.Core.Models.Order;
+using TastyDelivery.Core.Models.OrderModels;
 using TastyDelivery.Core.Models.ShoppingCart;
 using TastyDelivery.Core.Services;
 using TastyDelivery.Core.Services.Common;
@@ -56,7 +56,7 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
         }
 
         [Test]
-        public void TestCreateOrder()
+        public async Task TestCreateOrder()
         {
             var model = new CheckoutViewModel
             {
@@ -71,7 +71,7 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
 
             repository.Setup(r => r.AllReadOnly<Restaurant>()).Returns(new List<Restaurant> { mockRestaurant }.AsQueryable());
 
-            var result = orderService.CreateOrder(model);
+            var result = await orderService.CreateOrder(model);
 
             Assert.IsNotNull(result);
             Assert.That(result.HomeAddress, Is.EqualTo("123 St."));

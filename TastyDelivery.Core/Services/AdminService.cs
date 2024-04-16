@@ -25,7 +25,7 @@ namespace TastyDelivery.Core.Services
             repository = _repository;
             userManager = _userManager;
         }
-        public async Task<Restaurant> CreateRestaurant(string name, string workingHours, string location)
+        public Restaurant CreateRestaurant(string name, string workingHours, string location)
         {
             var model = new Restaurant
             {
@@ -34,7 +34,7 @@ namespace TastyDelivery.Core.Services
                 Location = location
             };
 
-            return await Task.FromResult(model);
+            return model;
         }
 
         public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price)
@@ -53,7 +53,7 @@ namespace TastyDelivery.Core.Services
 
         public async Task CreateDriver(AppointDriverModel model)
         {
-            var user = FindUserByEmail(model.Email);
+            var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
@@ -77,23 +77,6 @@ namespace TastyDelivery.Core.Services
             var removeFromRoles = await userManager.RemoveFromRolesAsync(user, existingRoles);
 
             var addToRoleResult = await userManager.AddToRoleAsync(user, UserRole.DeliveryMan.ToString());
-
-            if (addToRoleResult.Succeeded)
-            {
-                Console.WriteLine($"Successfully created role for User: {user.FirstName} New role: {string.Join(" ", await userManager.GetRolesAsync(user))}");
-            }
-        }
-
-        private ApplicationUser FindUserByEmail(string email)
-        {
-            var userEmail = repository.AllReadOnly<ApplicationUser>().Where(u => u.Email == email).Select(u => u.Email).FirstOrDefault();
-
-            if(userEmail == null)
-            {
-                return null;
-            }
-
-            return repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Email == userEmail);
         }
 
         private ApplicationUser CreateNewDriver(AppointDriverModel model)
