@@ -26,7 +26,7 @@
                                     <li class="list-group-item">@product.Name</li>
                                 }
                             </ul>
-                            <a href="@Url.Action("OrderDelivered", "DeliveryMan")" class="btn btn-primary mt-3">Order Delivered</a>
+                            <a href="@Url.Action("OrderDelivered", "DeliveryMan", new { orderId = order.OrderId})" class="btn btn-primary mt-3">Order Delivered</a>
                         </div>
                     </div>
                 </div>

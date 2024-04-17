@@ -17,5 +17,7 @@ namespace TastyDelivery.Core.Contracts
         public Task<AssignedOrdersViewModel> CreateAssignedOrderModel(int orderId);
 
         public Task<List<AssignedOrdersViewModel>> GetAssignedOrders(string userId);
+
+        public Task DeliverOrder(int orderId);
     }
 }

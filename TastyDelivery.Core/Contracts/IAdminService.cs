@@ -17,5 +17,7 @@ namespace TastyDelivery.Core.Contracts
         public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price);
 
         public Task CreateDriver(AppointDriverModel model);
+
+        public Task<List<CompletedDeliveriesAdminViewModel>> GetCompletedDeliveries();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TastyDelivery.Core.Contracts;
@@ -6,9 +7,11 @@ using TastyDelivery.Core.Models.DeliveryManModels;
 using TastyDelivery.Core.Services;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
 using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
+using TastyDelivery.Infrastructure.Utilities.Constants;
 
 namespace TastyDelivery.Controllers
 {
+    [Authorize(Roles = UsersConstants.DeliveryManRoleName)]
     public class DeliveryManController : Controller
     {
         private readonly IDeliveryManService deliveryManService;
@@ -50,6 +53,13 @@ namespace TastyDelivery.Controllers
             await deliveryManService.AssignOrderToWorker(orderId, userId);
 
             return RedirectToAction(nameof(AssignedOrders));
+        }
+
+        public async Task<IActionResult> OrderDelivered(int orderId)
+        {
+            await deliveryManService.DeliverOrder(orderId);
+
+            return RedirectToAction(nameof(Index));
         }
 
         private string GetUser()

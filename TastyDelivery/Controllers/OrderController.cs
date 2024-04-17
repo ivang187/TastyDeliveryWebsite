@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
 namespace TastyDelivery.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;

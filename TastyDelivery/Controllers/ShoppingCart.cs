@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ using TastyDelivery.Core.Services.Common;
 
 namespace TastyDelivery.Controllers
 {
+    [Authorize]
     public class ShoppingCart : Controller
     {
         private readonly IShoppingCartService shoppingCartService;

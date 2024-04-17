@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Diagnostics;
 using System.Security.Claims;
 using TastyDelivery.Areas.Admin;
@@ -41,11 +43,23 @@ namespace TastyDelivery.Controllers
             return View();
         }
 
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int statusCode)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (statusCode == 400)
+            {
+                ViewBag.ErrorMessage = "Sorry, the resource you requested could not be found.";
+                return View("Error400");
+            }
+            if (statusCode == 401)
+            {
+                return View("Error401");
+            }
+            if(statusCode == 404)
+            {
+                return View("Error404");
+            }
+
+            return View();
         }
     }
 }

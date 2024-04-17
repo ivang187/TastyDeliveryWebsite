@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TastyDelivery.Core.Contracts;
 using TastyDelivery.Core.Models.AdminModels;
 using TastyDelivery.Core.Models.RestaurantModels;
 using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Infrastructure.Data.Models.Enums;
+using TastyDelivery.Infrastructure.Data.Models.IdentityModels;
 
 namespace TastyDelivery.Areas.Admin.Controllers
 {
@@ -14,13 +17,16 @@ namespace TastyDelivery.Areas.Admin.Controllers
         private readonly IAdminService adminService;
         private readonly IRestaurantService restaurantService;
         private readonly IRepository repository;
+        private readonly IDeliveryManService deliveryManService;
         public JobController(IAdminService _adminService,
             IRestaurantService _restaurantService, 
-            IRepository _repository)
+            IRepository _repository,
+            IDeliveryManService _deliveryManService)
         {
             adminService = _adminService;
             restaurantService = _restaurantService;
             repository = _repository;
+            deliveryManService = _deliveryManService;
         }
 
         public IActionResult AddRestaurant()
@@ -91,6 +97,19 @@ namespace TastyDelivery.Areas.Admin.Controllers
             await adminService.CreateDriver(model);
             return RedirectToAction("Index", "Home");   
         }
+
+        public async Task<IActionResult> CompletedDeliveries()
+        {
+            var model = await adminService.GetCompletedDeliveries();
+
+            if (model == null)
+            {
+                return View();
+            }
+
+            return View(model);
+        }
+
 
         public IActionResult ToWebsite()
         {

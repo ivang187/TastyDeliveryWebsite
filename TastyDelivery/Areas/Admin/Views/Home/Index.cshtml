@@ -6,8 +6,8 @@
     <h1>Welcome, Admin!</h1>
     <div>
         <h2>Manage Deliveries</h2>
-        <button>View Completed Deliveries</button>
-        <button>View Ongoing Deliveries</button>
+        <a href="@Url.Action("CompletedDeliveries", "Job")" class="btn btn-primary">View Completed Deliveries</a>
+        <a href="@Url.Action("OngoingDeliveries", "Job")" class="btn btn-primary">View Ongoing Deliveries</a>
     </div>
     <div>
         <h2>Manage Restaurants and Drivers</h2>

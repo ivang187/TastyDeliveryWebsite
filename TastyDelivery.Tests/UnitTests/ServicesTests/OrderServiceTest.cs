@@ -90,33 +90,37 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
 
 
         [Test]
-        public void GetUserOrders_ReturnsCorrectOrders()
+        public void GetUserOrders_ReturnsOrders_WhenUserHasOrders()
         {
+            // Arrange
+            var mockUser = new ApplicationUser { Id = "1", FirstName = "John", LastName = "Doe", PhoneNumber = "1234567890" }; // Set a non-empty phone number
 
-            var mockOrder = new Order { Id = 1, HomeAddress = "123 Main St", TotalPrice = 50.0, Status = DeliveryStatus.Pending, Products = new List<OrderProducts>() };
+            var mockOrder = new Order { Id = 1, UserId = "1", HomeAddress = "123 Main St", TotalPrice = 50.0, Status = DeliveryStatus.Pending, Products = new List<OrderProducts>() };
             mockUser.Orders.Add(mockOrder);
 
-            repository.Setup(r => r.AllReadOnly<ApplicationUser>())
-                  .Returns(new List<ApplicationUser> { mockUser }.AsQueryable());
-            repository.Setup(r => r.AllReadOnly<Order>())
-              .Returns(new List<Order> { mockOrder }.AsQueryable());
+            var mockRepository = new Mock<IRepository>();
+            mockRepository.Setup(r => r.AllReadOnly<Order>())
+                          .Returns(new List<Order> { mockOrder }.AsQueryable());
 
+            var orderService = new OrderService(mockRepository.Object);
+
+            // Act
             var result = orderService.GetUserOrders(mockUser);
 
+            // Assert
             Assert.IsNotNull(result);
             Assert.That(result.Count, Is.EqualTo(1));
 
             var firstOrder = result[0];
             Assert.That(firstOrder.OrderId, Is.EqualTo(mockOrder.Id));
             Assert.That(firstOrder.FullName, Is.EqualTo(mockUser.FirstName + ' ' + mockUser.LastName));
-            Assert.That(firstOrder.PhoneNumber, Is.EqualTo(mockUser.PhoneNumber));
+            Assert.That(firstOrder.PhoneNumber, Is.EqualTo(mockUser.PhoneNumber)); // Assert that phone number matches the mock user
             Assert.That(firstOrder.Address, Is.EqualTo(mockOrder.HomeAddress));
             Assert.That(firstOrder.TotalPrice, Is.EqualTo(mockOrder.TotalPrice));
             Assert.That(firstOrder.Status, Is.EqualTo(mockOrder.Status));
 
             Assert.IsNotNull(firstOrder.Products);
             Assert.That(firstOrder.Products.Count, Is.EqualTo(mockOrder.Products.Count));
-
         }
 
         [Test]

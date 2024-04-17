@@ -28,7 +28,6 @@ namespace TastyDelivery.Core.Services
             userManager = _userManager;
         }
 
-
         public async Task AssignOrderToWorker(int orderId, string userId)
         {
             var order = await FindOrderById(orderId);
@@ -151,6 +150,17 @@ namespace TastyDelivery.Core.Services
                 return model;
             }
             return null;               
+        }
+
+        public async Task DeliverOrder(int orderId)
+        {
+            var order = await FindOrderById(orderId);
+
+            order.Status = DeliveryStatus.Delivered;
+            order.TimeDelivered = DateTime.Now;
+
+            repository.Update(order);
+            await repository.SaveChanges();
         }
     }
 }

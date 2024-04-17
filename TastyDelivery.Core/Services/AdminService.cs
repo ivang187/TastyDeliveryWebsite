@@ -100,5 +100,46 @@ namespace TastyDelivery.Core.Services
 
             return user;
         }
+
+        public async Task<List<CompletedDeliveriesAdminViewModel>> GetCompletedDeliveries()
+        {
+            var orders = await repository.AllReadOnly<Order>().Where(o => o.Status == DeliveryStatus.Delivered).ToListAsync();
+
+            var model = new List<CompletedDeliveriesAdminViewModel>();
+
+            if(orders.Any())
+            {
+                foreach (var order in orders)
+                {
+                    var item = CreateCompleteDeliveryViewModel(order);
+                    model.Add(item);
+                }
+
+                return model;
+            }
+
+            return null;
+            
+        }
+
+        private CompletedDeliveriesAdminViewModel CreateCompleteDeliveryViewModel(Order order)
+        {
+            var deliveryMan = repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Id == order.DeliveryManId);
+            var restaurantName = repository.AllReadOnly<Restaurant>().Where(r => r.Id == order.RestaurantId).Select(r => r.Name).FirstOrDefault();
+            var user = repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Id == order.UserId);
+
+            return new CompletedDeliveriesAdminViewModel
+            {
+                DeliveryMan = deliveryMan,
+                DeliveryManName = deliveryMan.FirstName + " " + deliveryMan.LastName,
+                TimeDelivered = order.TimeDelivered,
+                TimeOrdered = order.TimeOrdered,
+                Order = order,
+                OrderId = order.Id,
+                RestaurantName = restaurantName,
+                User = user,
+                UserName = user.FirstName + " " + user.LastName,
+            };
+        }
     }
 }

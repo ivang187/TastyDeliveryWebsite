@@ -78,5 +78,40 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             Assert.That(menuItems[0].Price, Is.EqualTo(10.0));
             Assert.That(menuItems[0].Category, Is.EqualTo(ProductCategory.Mains));
         }
+
+        [Test]
+        public void GetAllRestaurants_ReturnsRestaurants()
+        {
+            var mockRestaurants = new List<Restaurant>
+            {
+                new Restaurant { Id = 1, Name = "Restaurant1", Location = "Location1", WorkingHours = "10:00 - 18:00" },
+                new Restaurant { Id = 2, Name = "Restaurant2", Location = "Location2", WorkingHours = "09:00 - 20:00" }
+            };
+
+            var mockRepository = new Mock<IRepository>();
+            mockRepository.Setup(r => r.AllReadOnly<Restaurant>())
+                          .Returns(mockRestaurants.AsQueryable());
+
+            var restaurantService = new RestaurantService(mockRepository.Object);
+
+            var result = restaurantService.GetAllRestaurants();
+
+            Assert.IsNotNull(result);
+            Assert.That(result.Count(), Is.EqualTo(mockRestaurants.Count));
+
+            var expectedFirstRestaurant = mockRestaurants.First();
+            var actualFirstRestaurant = result.First();
+            Assert.That(actualFirstRestaurant.Id, Is.EqualTo(expectedFirstRestaurant.Id));
+            Assert.That(actualFirstRestaurant.Name, Is.EqualTo(expectedFirstRestaurant.Name));
+            Assert.That(actualFirstRestaurant.Location, Is.EqualTo(expectedFirstRestaurant.Location));
+            Assert.That(actualFirstRestaurant.WorkingHours, Is.EqualTo(expectedFirstRestaurant.WorkingHours));
+
+            var expectedLastRestaurant = mockRestaurants.Last();
+            var actualLastRestaurant = result.Last();
+            Assert.That(actualLastRestaurant.Id, Is.EqualTo(expectedLastRestaurant.Id));
+            Assert.That(actualLastRestaurant.Name, Is.EqualTo(expectedLastRestaurant.Name));
+            Assert.That(actualLastRestaurant.Location, Is.EqualTo(expectedLastRestaurant.Location));
+            Assert.That(actualLastRestaurant.WorkingHours, Is.EqualTo(expectedLastRestaurant.WorkingHours));
+        }
     }
 }

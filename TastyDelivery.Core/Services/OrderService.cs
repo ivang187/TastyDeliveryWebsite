@@ -52,13 +52,12 @@ namespace TastyDelivery.Core.Services
         public List<OrderDetailsViewModel> GetUserOrders(ApplicationUser user)
         {
             var orders = new List<OrderDetailsViewModel>();
-            var userOrders = repository.AllReadOnly<ApplicationUser>()
-                    .Include(o => o.Orders)
-                        .ThenInclude(o => o.Products)
-                            .ThenInclude(op => op.Product) 
-                    .Where(o => o.Id == user.Id)
-                    .SelectMany(o => o.Orders)
-                    .ToList();
+            var userOrders = repository.AllReadOnly<Order>()
+                .Include(o => o.User)
+                .Include(o => o.Products)
+                    .ThenInclude(p => p.Product)
+                .Where(o => o.UserId == user.Id && o.Status != DeliveryStatus.Delivered)
+                .ToList();
 
 
             if (userOrders.Any())

@@ -6,39 +6,54 @@
     ViewBag.Title = "Cart";
 }
 
-<h1>Cart</h1>
+<h1 class="text-center">Cart</h1>
 
 @if (Model != null && Model.Products.Count > 0)
 {
-    <h2>Restaurant: @Model.RestaurantName</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Products)
-                {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.Price BGN</td>
-                        <td>@(item.Price * item.Quantity) BGN</td>
-                        <td><a href="@Url.Action("Remove", "ShoppingCart", new {id = item.Id})" class="btn btn-primary">Remove</a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    <div>
-        Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN <div><a href="@Url.Action("SendToCheckout", "ShoppingCart")" class="btn btn-primary">Proceed to Checkout</a></div></div>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center mb-4">Restaurant: @Model.RestaurantName</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Products)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Price BGN</td>
+                                    <td>@(item.Price * item.Quantity) BGN</td>
+                                    <td><a href="@Url.Action("Remove", "ShoppingCart", new {id = item.Id})" class="btn btn-danger btn-sm">Remove</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <p class="lead">Total Price: @Model.Products.Sum(item => item.Price * item.Quantity).ToString("0.00") BGN</p>
+                    <a href="@Url.Action("SendToCheckout", "ShoppingCart")" class="btn btn-primary">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <p>Your cart is empty.</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="lead text-center">Your cart is empty.</p>
+            </div>
+        </div>
+    </div>
 }

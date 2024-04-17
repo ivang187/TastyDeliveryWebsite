@@ -25,9 +25,11 @@ namespace TastyDelivery.Controllers
             var model = _restaurantService.GetRestaurantMenu(id);
             var restaurantName = _restaurantService.GetRestaurantName(id);
 
-            if(model == null)
+
+            if(model == null || !model.Any())
             {
-                return BadRequest();
+                int statusCode = 404;
+                return RedirectToAction("Error", "Home", new { statusCode = statusCode });
             }
 
             ViewBag.Title = $"{restaurantName} \nMenu";

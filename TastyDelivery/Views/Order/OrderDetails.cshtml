@@ -1,76 +1,83 @@
 ﻿@using TastyDelivery.Core.Models.OrderModels
+@using TastyDelivery.Infrastructure.Data.Models.Enums
 @model List<OrderDetailsViewModel>
 
 @{
     ViewBag.Title = "My Orders";
 }
 
-@if (Model != null && Model.Any())
-{
-    @foreach (var order in Model)
-    {
-        <div class="order-container">
-            <h2>Order ID: @order.OrderId</h2>
-            <div class="delivery-info">
-                <h2>Delivery Information</h2>
-                <p><strong>Full Name:</strong> @order.FullName</p>
-                <p><strong>Address:</strong> @order.Address</p>
-                <p><strong>Phone Number:</strong> @order.PhoneNumber</p>
-            </div>
+<div class="container">
+    <div class="row">
+        @if(Model != null && Model.Any())
+        {
+            @foreach (var order in Model)
+            {
+                @if (order.Status == DeliveryStatus.OutForDelivery || order.Status == DeliveryStatus.Pending)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card order-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Order ID: @order.OrderId</h5>
+                                <div class="delivery-info">
+                                    <h6 class="card-subtitle mb-2 text-muted">Delivery Information</h6>
+                                    <p><strong>Full Name:</strong> @order.FullName</p>
+                                    <p><strong>Address:</strong> @order.Address</p>
+                                    <p><strong>Phone Number:</strong> @order.PhoneNumber</p>
+                                </div>
 
-            <div class="order-summary">
-                <h2>Order Summary</h2>
-                <p><strong>Restaurant Name:</strong> @order.RestaurantName</p>
-                <p><strong>Total Price:</strong> @order.TotalPrice.ToString("0.00") BGN</p>
-                <p><strong>Status:</strong> @order.Status</p>
-                <p><strong>Created:</strong> @order.CreatedOrder.ToString("yyyy-MM-dd HH:mm:ss")</p>
-                <p><strong>Expected Delivery:</strong> @order.CreatedOrder.AddMinutes(40).ToString("yyyy-MM-dd HH:mm:ss")</p>
-            </div>
+                                <div class="order-summary">
+                                    <h6 class="card-subtitle mb-2 text-muted">Order Summary</h6>
+                                    <p><strong>Restaurant Name:</strong> @order.RestaurantName</p>
+                                    <p><strong>Total Price:</strong> @order.TotalPrice.ToString("0.00") BGN</p>
+                                    <p><strong>Status:</strong> @order.Status</p>
+                                    <p><strong>Created:</strong> @order.CreatedOrder.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                                    <p><strong>Expected Delivery:</strong> @order.CreatedOrder.AddMinutes(40).ToString("yyyy-MM-dd HH:mm:ss")</p>
+                                </div>
 
-            <div class="ordered-products">
-                <h2>Ordered Products</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var product in order.Products)
-                        {
-                            <tr>
-                                <td>@product.Name</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                <div class="ordered-products">
+                                    <h6 class="card-subtitle mb-2 text-muted">Ordered Products</h6>
+                                    <ul class="list-group list-group-flush">
+                                        @foreach (var product in order.Products)
+                                        {
+                                            <li class="list-group-item">@product.Name</li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="col-md-12">
+                <p>You have no orders.</p>
             </div>
-        </div>
-    }
-}
-else
-{
-    <div>
-        <p>You have no orders.</p>
+        }
     </div>
-}
 
-<div>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Return to Home</a>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Return to Home</a>
+        </div>
+    </div>
 </div>
 
 <style>
-    .order-container {
+    .order-card {
         border: 1px solid #ccc;
-        border-radius: 5px; 
-        padding: 20px; 
-        margin-bottom: 20px; 
-        width: 400px;
-        height: 700px;
-        overflow: hidden; 
-        box-sizing: border-box;
-        float: left; 
-        margin-right: 20px; 
+        border-radius: 10px;
+        margin-bottom: 20px;
     }
-</style>
 
+    .delivery-info,
+    .order-summary,
+    .ordered-products {
+        margin-bottom: 10px;
+    }
+
+        .ordered-products .list-group-item {
+            background-color: #fff;
+        }
+</style>

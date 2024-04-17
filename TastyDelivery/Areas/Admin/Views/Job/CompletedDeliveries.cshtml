@@ -1,0 +1,57 @@
+﻿@using TastyDelivery.Core.Models.AdminModels
+
+@model List<CompletedDeliveriesAdminViewModel>
+
+@{
+    var groupedDeliveries = Model.GroupBy(d => d.DeliveryManName);
+}
+
+<h2>Completed Deliveries</h2>
+
+@foreach (var group in groupedDeliveries)
+{
+    <div class="delivery-man-group">
+        <h3>@group.Key</h3>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Delivery ID</th>
+                        <th>Client Name</th>
+                        <th>Restaurant</th>
+                        <th>Order Made</th>
+                        <th>Order Delivered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var delivery in group)
+                    {
+                        <tr>
+                            <td>@delivery.OrderId</td>
+                            <td>@delivery.UserName</td>
+                            <td>@delivery.RestaurantName</td>
+                            <td>@delivery.TimeOrdered</td>
+                            <td>@delivery.TimeDelivered</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<style>
+    .delivery-man-group {
+        margin-bottom: 20px;
+    }
+
+        .delivery-man-group h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>
