@@ -14,10 +14,10 @@ namespace TastyDelivery.Core.Contracts
 
         public Task AssignOrderToWorker(int orderId, string userId);
 
-        public Task<AssignedOrdersViewModel> CreateAssignedOrderModel(int orderId);
+        public AssignedOrdersViewModel CreateAssignedOrderModel(int orderId);
 
-        public Task<List<AssignedOrdersViewModel>> GetAssignedOrders(string userId);
+        public List<AssignedOrdersViewModel> GetAssignedOrders(string userId);
 
-        public Task DeliverOrder(int orderId);
+        public void DeliverOrder(int orderId);
     }
 }

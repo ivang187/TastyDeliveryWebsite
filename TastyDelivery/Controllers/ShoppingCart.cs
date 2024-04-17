@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
@@ -14,15 +15,12 @@ namespace TastyDelivery.Controllers
     public class ShoppingCart : Controller
     {
         private readonly IShoppingCartService shoppingCartService;
-        private readonly IRepository repository;
         private readonly IRestaurantService restaurantService;
 
         public ShoppingCart(IShoppingCartService _shoppingCartService,
-            IRepository _repository, 
             IRestaurantService _restaurantService) 
         {
             shoppingCartService = _shoppingCartService;
-            repository = _repository;
             restaurantService = _restaurantService;
         }
 
@@ -52,9 +50,14 @@ namespace TastyDelivery.Controllers
                 double price = data.GetProperty("price").GetDouble();
                 int quantity = data.GetProperty("quantity").GetInt32();
 
-                var model = await shoppingCartService.FindItemToAdd(productId, price, quantity);
+                var model = shoppingCartService.FindItemToAdd(productId, price, quantity);
 
                 var cart = GetCartSession();
+
+                if(cart.RestaurantName != restaurantName && cart.RestaurantName != null)
+                {
+                    return StatusCode(400);
+                }
 
                 cart.RestaurantName = restaurantName;
 
@@ -81,13 +84,18 @@ namespace TastyDelivery.Controllers
 
         public async Task<IActionResult> Remove(int id)
         {
-            var model = await shoppingCartService.FindItemToRemove(id);
+            var model = shoppingCartService.FindItemToRemove(id);
 
             var cart = GetCartSession();
 
             var existingItem = cart.Products.FirstOrDefault(p => p.Id == model.Id);
 
             cart.Products.Remove(existingItem);
+
+            if(cart.Products.Count == 0) 
+            {
+                cart.RestaurantName = null;
+            }
 
             UpdateCartSession(cart);
 

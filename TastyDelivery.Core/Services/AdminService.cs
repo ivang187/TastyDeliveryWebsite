@@ -101,9 +101,9 @@ namespace TastyDelivery.Core.Services
             return user;
         }
 
-        public async Task<List<CompletedDeliveriesAdminViewModel>> GetCompletedDeliveries()
+        public List<CompletedDeliveriesAdminViewModel> GetCompletedDeliveries()
         {
-            var orders = await repository.AllReadOnly<Order>().Where(o => o.Status == DeliveryStatus.Delivered).ToListAsync();
+            var orders = repository.AllReadOnly<Order>().Where(o => o.Status == DeliveryStatus.Delivered).ToList();
 
             var model = new List<CompletedDeliveriesAdminViewModel>();
 

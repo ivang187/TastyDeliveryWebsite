@@ -98,9 +98,9 @@ namespace TastyDelivery.Areas.Admin.Controllers
             return RedirectToAction("Index", "Home");   
         }
 
-        public async Task<IActionResult> CompletedDeliveries()
+        public IActionResult CompletedDeliveries()
         {
-            var model = await adminService.GetCompletedDeliveries();
+            var model = adminService.GetCompletedDeliveries();
 
             if (model == null)
             {

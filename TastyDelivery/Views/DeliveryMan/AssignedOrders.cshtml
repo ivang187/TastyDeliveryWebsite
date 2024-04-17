@@ -23,7 +23,7 @@
                             <ul class="list-group">
                                 @foreach (var product in order.Products)
                                 {
-                                    <li class="list-group-item">@product.Name</li>
+                                    <li>@product.Name</li>
                                 }
                             </ul>
                             <a href="@Url.Action("OrderDelivered", "DeliveryMan", new { orderId = order.OrderId})" class="btn btn-primary mt-3">Order Delivered</a>

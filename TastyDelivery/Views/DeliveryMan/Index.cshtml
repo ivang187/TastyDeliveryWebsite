@@ -1,13 +1,52 @@
 ﻿@using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
 @using TastyDelivery.Core.Models.DeliveryManModels
+@using TastyDelivery.Core.Services.Common
+@using TastyDelivery.Infrastructure.Data.Models
+@using TastyDelivery.Infrastructure.Data.Models.Enums
 @using TastyDelivery.Infrastructure.Data.Models.IdentityModels
 
 @inject UserManager<ApplicationUser> UserManager;
+@inject IRepository repository;
 
 @{
     ViewData["Title"] = "Delivery Person Home";
     var user = await UserManager.FindByEmailAsync(User.Identity.Name);
+    var assignedOrders = repository.AllReadOnly<Order>()
+                                    .Where(o => o.DeliveryManId == user.Id && o.Status == DeliveryStatus.OutForDelivery)
+                                    .ToList();
 }
 
-<h1>Welcome, @user.FirstName</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Welcome, @user.FirstName</h2>
+                </div>
+                <div class="card-body">
+                    @if (assignedOrders.Any())
+                    {
+                        <h3 class="text-center">
+                            @if (assignedOrders.Count == 1)
+                            {
+                                <span>You have 1 Assigned Order!</span>
+                            }
+                            else
+                            {
+                                <span>You have @assignedOrders.Count Assigned Orders!</span>
+                            }
+                        </h3>
+                    }
+                    else
+                    {
+                        <h3 class="text-center">You currently have no Assigned Orders!</h3>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

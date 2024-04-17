@@ -47,7 +47,6 @@ namespace TastyDelivery.Controllers
         {
             if (statusCode == 400)
             {
-                ViewBag.ErrorMessage = "Sorry, the resource you requested could not be found.";
                 return View("Error400");
             }
             if (statusCode == 401)

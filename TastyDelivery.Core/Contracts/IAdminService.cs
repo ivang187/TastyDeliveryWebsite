@@ -18,6 +18,6 @@ namespace TastyDelivery.Core.Contracts
 
         public Task CreateDriver(AppointDriverModel model);
 
-        public Task<List<CompletedDeliveriesAdminViewModel>> GetCompletedDeliveries();
+        public List<CompletedDeliveriesAdminViewModel> GetCompletedDeliveries();
     }
 }

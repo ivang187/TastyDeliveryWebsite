@@ -30,7 +30,7 @@ namespace TastyDelivery.Core.Services
 
         public async Task AssignOrderToWorker(int orderId, string userId)
         {
-            var order = await FindOrderById(orderId);
+            var order = FindOrderById(orderId);
             await UpdateOrder(order, userId);
             await repository.SaveChanges();
         }
@@ -91,15 +91,14 @@ namespace TastyDelivery.Core.Services
                 }).ToList()
             };
         }
-        private async Task<Order> FindOrderById(int orderId)
+        private Order FindOrderById(int orderId)
         {
-            return await repository.AllReadOnly<Order>().FirstOrDefaultAsync(o => o.Id == orderId);
-
+            return repository.AllReadOnly<Order>().FirstOrDefault(o => o.Id == orderId);
         }
 
-        public async Task<AssignedOrdersViewModel> CreateAssignedOrderModel(int orderId)
+        public AssignedOrdersViewModel CreateAssignedOrderModel(int orderId)
         {
-            var order = await FindOrderById(orderId);
+            var order = FindOrderById(orderId);
             var user = repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Id == order.UserId);
             var restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Id == order.RestaurantId);
             var deliveryMan = repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Id == order.DeliveryManId);
@@ -125,14 +124,14 @@ namespace TastyDelivery.Core.Services
             };
         }
 
-        public async Task<List<AssignedOrdersViewModel>> GetAssignedOrders(string userId)
+        public List<AssignedOrdersViewModel> GetAssignedOrders(string userId)
         {
-            var currentDeliveryManOrders = await repository.AllReadOnly<Order>()
+            var currentDeliveryManOrders = repository.AllReadOnly<Order>()
                 .Include(o => o.DeliveryMan)
                 .Include(o => o.Products)
                     .ThenInclude(p => p.Product)
                 .Where(o => o.DeliveryManId == userId)
-                .ToListAsync();
+                .ToList();
 
             var model = new List<AssignedOrdersViewModel>();
 
@@ -142,7 +141,7 @@ namespace TastyDelivery.Core.Services
                 {
                     if (order.Status == DeliveryStatus.OutForDelivery)
                     {
-                        var item = await CreateAssignedOrderModel(order.Id);
+                        var item = CreateAssignedOrderModel(order.Id);
                         model.Add(item);
                     }
                 }
@@ -152,15 +151,15 @@ namespace TastyDelivery.Core.Services
             return null;               
         }
 
-        public async Task DeliverOrder(int orderId)
+        public void DeliverOrder(int orderId)
         {
-            var order = await FindOrderById(orderId);
+            var order = FindOrderById(orderId);
 
             order.Status = DeliveryStatus.Delivered;
             order.TimeDelivered = DateTime.Now;
 
             repository.Update(order);
-            await repository.SaveChanges();
+            repository.SaveChanges();
         }
     }
 }

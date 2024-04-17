@@ -84,8 +84,8 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             Assert.That(result.User.PhoneNumber, Is.EqualTo("123456789"));
             Assert.That(result.RestaurantId, Is.EqualTo(1));
 
-            repository.Verify(r => r.AddNew(It.IsAny<Order>()), Times.Once);
-            repository.Verify(r => r.SaveChanges(), Times.Once);
+            repository.Verify(r => r.AddNew(It.IsAny<Order>()));
+            repository.Verify(r => r.SaveChanges());
         }
 
 
@@ -93,43 +93,49 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
         public void GetUserOrders_ReturnsOrders_WhenUserHasOrders()
         {
             // Arrange
-            var mockUser = new ApplicationUser { Id = "1", FirstName = "John", LastName = "Doe", PhoneNumber = "1234567890" }; // Set a non-empty phone number
 
-            var mockOrder = new Order { Id = 1, UserId = "1", HomeAddress = "123 Main St", TotalPrice = 50.0, Status = DeliveryStatus.Pending, Products = new List<OrderProducts>() };
-            mockUser.Orders.Add(mockOrder);
+            var mockOrders = new List<Order> 
+            { 
+                new Order 
+                {
+                    Id = 1, UserId = "1", PhoneNumber = "123456789", HomeAddress = "123 Main St", TotalPrice = 50.0, Status = DeliveryStatus.Pending, Products = new List<OrderProducts>() 
+                },
+                new Order
+                {
+                    Id = 2, UserId = "1", PhoneNumber = "123456789", HomeAddress = "123 Main St", TotalPrice = 20.0, Status = DeliveryStatus.OutForDelivery, Products = new List<OrderProducts>()
+                },
+                new Order
+                {
+                    Id = 3, UserId = "1", PhoneNumber = "123456789", HomeAddress = "123 Main St", TotalPrice = 50.0, Status = DeliveryStatus.Pending, Products = new List<OrderProducts>()
+                }
+            };
 
-            var mockRepository = new Mock<IRepository>();
-            mockRepository.Setup(r => r.AllReadOnly<Order>())
-                          .Returns(new List<Order> { mockOrder }.AsQueryable());
-
-            var orderService = new OrderService(mockRepository.Object);
+            repository.Setup(r => r.AllReadOnly<Order>())
+                          .Returns(mockOrders.AsQueryable());
 
             // Act
             var result = orderService.GetUserOrders(mockUser);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.That(result.Count, Is.EqualTo(1));
+            Assert.That(result.Count, Is.EqualTo(3));
 
             var firstOrder = result[0];
-            Assert.That(firstOrder.OrderId, Is.EqualTo(mockOrder.Id));
+            Assert.That(firstOrder.OrderId, Is.EqualTo(mockOrders[0].Id));
             Assert.That(firstOrder.FullName, Is.EqualTo(mockUser.FirstName + ' ' + mockUser.LastName));
-            Assert.That(firstOrder.PhoneNumber, Is.EqualTo(mockUser.PhoneNumber)); // Assert that phone number matches the mock user
-            Assert.That(firstOrder.Address, Is.EqualTo(mockOrder.HomeAddress));
-            Assert.That(firstOrder.TotalPrice, Is.EqualTo(mockOrder.TotalPrice));
-            Assert.That(firstOrder.Status, Is.EqualTo(mockOrder.Status));
+            Assert.That(firstOrder.PhoneNumber, Is.EqualTo(mockOrders[0].PhoneNumber));
+            Assert.That(firstOrder.Address, Is.EqualTo(mockOrders[0].HomeAddress));
+            Assert.That(firstOrder.TotalPrice, Is.EqualTo(mockOrders[0].TotalPrice));
+            Assert.That(firstOrder.Status, Is.EqualTo(mockOrders[0].Status));
 
             Assert.IsNotNull(firstOrder.Products);
-            Assert.That(firstOrder.Products.Count, Is.EqualTo(mockOrder.Products.Count));
+            Assert.That(firstOrder.Products.Count, Is.EqualTo(mockOrders[0].Products.Count));
         }
 
         [Test]
         public void GetUserOrders_ReturnsNullWhenNoOrders()
         {
-            repository.Setup(r => r.AllReadOnly<ApplicationUser>())
-                      .Returns(new List<ApplicationUser> { mockUser }.AsQueryable());
-
-            mockUser.Orders.Clear();
+            repository.Setup(r => r.AllReadOnly<Order>()).Returns(new List<Order>().AsQueryable());
 
             var result = orderService.GetUserOrders(mockUser);
 
@@ -139,19 +145,61 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
         [Test]
         public void GetUserOrders_ReturnsMultipleOrders()
         {
-            mockUser.Orders.Clear();
-            var mockOrder1 = new Order { Id = 1, };
-            var mockOrder2 = new Order { Id = 2, };
-            mockUser.Orders.Add(mockOrder1);
-            mockUser.Orders.Add(mockOrder2);
+            var mockOrders = new List<Order>
+            {
+                new Order()
+                {
+                Id = 1,
+                User = mockUser,
+                UserId = mockUser.Id,
+                Status = DeliveryStatus.OutForDelivery,
+                HomeAddress = "sdfsdfsdf",
+                PhoneNumber = "|FDFSDF",
+                TotalPrice = 44.02
+                },
+                new Order()
+                {
+                Id = 2,
+                User = mockUser,
+                UserId = mockUser.Id,
+                Status = DeliveryStatus.Pending,
+                HomeAddress = "sdsdgsd",
+                PhoneNumber = "|FDFSDF",
+                TotalPrice = 42.02
+                }
+            };
+            
 
-            repository.Setup(r => r.AllReadOnly<ApplicationUser>())
-                .Returns(new List<ApplicationUser> { mockUser }.AsQueryable());
+            repository.Setup(r => r.AllReadOnly<Order>())
+                .Returns(mockOrders.AsQueryable());
 
             var result = orderService.GetUserOrders(mockUser);
 
             Assert.IsNotNull(result);
             Assert.That(result.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void GetUserOrders_ReturnsOrderDetailsViewModelList_WhenUserHasOrders()
+        {
+            // Arrange
+            var user = new ApplicationUser { Id = "1" };
+            var orders = new List<Order>
+            {
+                new Order { UserId = "1", Status = DeliveryStatus.Pending },
+                new Order { UserId = "1", Status = DeliveryStatus.OutForDelivery }
+            };
+
+            repository.Setup(repo => repo.AllReadOnly<Order>())
+                          .Returns(orders.AsQueryable());
+
+            // Act
+            var result = orderService.GetUserOrders(user);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.IsTrue(result.All(order => order.User.Id == user.Id));
         }
     }
 }

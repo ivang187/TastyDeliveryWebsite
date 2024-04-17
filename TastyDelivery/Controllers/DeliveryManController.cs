@@ -40,7 +40,12 @@ namespace TastyDelivery.Controllers
         public async Task<IActionResult> AssignedOrders()
         {
             var userId = GetUser();
-            var model = await deliveryManService.GetAssignedOrders(userId);
+            var model = deliveryManService.GetAssignedOrders(userId);
+
+            if(!model.Any())
+            {
+                return View();
+            }
 
             return View(model);
         }
@@ -55,9 +60,9 @@ namespace TastyDelivery.Controllers
             return RedirectToAction(nameof(AssignedOrders));
         }
 
-        public async Task<IActionResult> OrderDelivered(int orderId)
+        public IActionResult OrderDelivered(int orderId)
         {
-            await deliveryManService.DeliverOrder(orderId);
+            deliveryManService.DeliverOrder(orderId);
 
             return RedirectToAction(nameof(Index));
         }

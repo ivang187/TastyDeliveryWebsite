@@ -123,6 +123,8 @@
                             } else {
                                 alert('Failed to add item to cart: ' + response.message);
                             }
+                        } else if (xhr.status === 400) {
+                            window.location.href = '/Home/Error?statusCode=400';
                         } else {
                             alert('Failed to add item to cart. Status: ' + xhr.status);
                         }
