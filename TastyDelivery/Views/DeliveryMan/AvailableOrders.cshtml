@@ -5,36 +5,47 @@
     ViewBag.Title = "Order List";
 }
 
-<h1>Order List</h1>
-<hr />
+
+
 
 <div class="row">
-    @foreach (var order in Model)
+    @if(Model == null)
     {
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Order # @order.OrderId</h5>
-                    <p><strong>Customer:</strong> @order.FullName</p>
-                    <p><strong>Address:</strong> @order.Address</p>
-                    <p><strong>Phone:</strong> @order.PhoneNumber</p>
-                    <p><strong>Total Price:</strong> @order.TotalPrice</p>
-                    <p><strong>Created Order:</strong> @order.CreatedOrder</p>
-                    <p><strong>Expected Delivery:</strong> @order.ExpectedDelivery</p>
-                    <p><strong>Restaurant:</strong> @order.RestaurantName</p>
-                    <p><strong>Status:</strong> @order.Status</p>
-                    <hr />
-                    <p><strong>Products:</strong></p>
-                    <ul class="list-group list-group-flush">
-                        @foreach (var product in order.Products)
-                        {
-                            <li class="list-group-item">@product.Name</li>
-                        }
-                    </ul>
-                    <hr />
-                    <a href="@Url.Action("TakeOrder", "DeliveryMan", new { orderId = order.OrderId })" class="btn btn-primary">Take Order</a>
+        <h2>There are currently no available orders.</h2>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <h1>Order List</h1>
+            <hr />
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Order # @order.OrderId</h5>
+                        <p><strong>Customer:</strong> @order.FullName</p>
+                        <p><strong>Address:</strong> @order.Address</p>
+                        <p><strong>Phone:</strong> @order.PhoneNumber</p>
+                        <p><strong>Total Price:</strong> @order.TotalPrice</p>
+                        <p><strong>Created Order:</strong> @order.CreatedOrder</p>
+                        <p><strong>Expected Delivery:</strong> @order.ExpectedDelivery</p>
+                        <p><strong>Restaurant:</strong> @order.RestaurantName</p>
+                        <p><strong>Status:</strong> @order.Status</p>
+                        <hr />
+                        <p><strong>Products:</strong></p>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var product in order.Products)
+                            {
+                                <li class="list-group-item">@product.Name</li>
+                            }
+                        </ul>
+                        <hr />
+                        <a href="@Url.Action("TakeOrder", "DeliveryMan", new { orderId = order.OrderId })" class="btn btn-primary">Take Order</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>
+
+

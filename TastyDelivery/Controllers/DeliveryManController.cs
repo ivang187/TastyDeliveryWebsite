@@ -37,12 +37,12 @@ namespace TastyDelivery.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> AssignedOrders()
+        public IActionResult AssignedOrders()
         {
             var userId = GetUser();
             var model = deliveryManService.GetAssignedOrders(userId);
 
-            if(!model.Any())
+            if(model == null || !model.Any())
             {
                 return View();
             }

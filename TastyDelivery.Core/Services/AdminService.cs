@@ -62,12 +62,12 @@ namespace TastyDelivery.Core.Services
             }
             else
             {
+                await UpdateUserRole(user);
                 user.Role = UserRole.DeliveryMan;
                 user.HomeAddress = null;
                 repository.Update(user);
             }
 
-            await UpdateUserRole(user);
             await repository.SaveChanges();
         }
 
@@ -95,8 +95,6 @@ namespace TastyDelivery.Core.Services
 
             var passwordHasher = new PasswordHasher<ApplicationUser>();
             user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
-
-            userManager.CreateAsync(user);
 
             return user;
         }
