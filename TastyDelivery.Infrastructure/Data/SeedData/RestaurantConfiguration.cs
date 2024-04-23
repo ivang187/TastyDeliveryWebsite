@@ -17,23 +17,26 @@ namespace TastyDelivery.Infrastructure.Data.SeedData
                 new Restaurant
                 {
                     Id = 1,
-                    Name = "Mishel Bar & Dinner",
+                    Name = "Mishel",
                     WorkingHours = "8:00-23:00",
-                    Location = "Iskar Boulevard 65, Samokov"
+                    Location = "Iskar Boulevard 65, Samokov",
+                    Type = "Bar & Dinner"
                 },
                 new Restaurant
                 {
                     Id = 2,
-                    Name = "Mehana Pri Sote",
+                    Name = "Pri Sote",
                     WorkingHours = "8:00-0:00",
-                    Location = "Tourist Garden Park 82, Samokov"
+                    Location = "Tourist Garden Park 82, Samokov",
+                    Type = "Mehana"
                 },
                 new Restaurant
                 {
                     Id = 3,
-                    Name = "Delight Bar & Dinner",
+                    Name = "Delight",
                     WorkingHours = "8:00-23:00",
-                    Location = "Tsar Boris III Boulevard 127A, Samokov"
+                    Location = "Tsar Boris III Boulevard 127A, Samokov",
+                    Type = "Bar & Dinner"
                 }
                 );
         }

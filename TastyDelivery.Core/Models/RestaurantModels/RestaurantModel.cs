@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TastyDelivery.Infrastructure.Data.Models;
+using TastyDelivery.Models.RestaurantModels;
 
 namespace TastyDelivery.Core.Models.RestaurantModels
 {
     public class RestaurantModel
     {
-        public int Id { get; set; }
+        public List<RestaurantsViewModel> Restaurants { get; set; } = new List<RestaurantsViewModel>();
 
-        public string Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Type in atleast one menu item to add!")]
+        public string MenuItems { get; set; }
+
+        public int RestaurantId { get; set; }
     }
 }

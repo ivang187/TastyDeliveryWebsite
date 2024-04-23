@@ -17,6 +17,8 @@ namespace TastyDelivery.Core.Services.Common
 
         public void Update<T>(T entity) where T : class;
 
+        public void Delete<T>(T entity) where T : class;
+
         public Task SaveChanges();
     }
 }

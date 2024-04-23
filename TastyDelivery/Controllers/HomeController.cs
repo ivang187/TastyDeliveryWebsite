@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +38,18 @@ namespace TastyDelivery.Controllers
                 {
                     return RedirectToAction("Index", "DeliveryMan");
                 }
-                return RedirectToAction("Restaurants", "Restaurant");
+
+                return RedirectToAction(nameof(CustomerHome));
             }
 
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult CustomerHome() 
+        {
+            var restaurantTypes = _restaurantService.GetDistinctTypes();
+            ViewBag.RestaurantTypes = restaurantTypes;
             return View();
         }
 

@@ -37,10 +37,16 @@ namespace TastyDelivery.Core.Services
                 {
                     Id = r.Id,
                     Name = r.Name,
+                    Type = r.Type,
                     Location = r.Location,
                     WorkingHours = r.WorkingHours
                 })
                 .ToList();
+        }
+
+        public List<string> GetDistinctTypes()
+        {
+            return repository.AllReadOnly<Restaurant>().Select(r => r.Type).Distinct().ToList();
         }
 
         public IEnumerable<RestaurantMenuViewModel> GetRestaurantMenu(int id)
@@ -58,6 +64,46 @@ namespace TastyDelivery.Core.Services
                     Category = pr.Product.Category
                 })
                 .ToList();
+        }
+
+        public List<RestaurantsViewModel> GetRestaurantsByType(string type)
+        {
+            return repository.AllReadOnly<Restaurant>()
+                .Where(r => r.Type == type)
+                .Select(r => new RestaurantsViewModel
+                {
+                    Id = r.Id,
+                    Location = r.Location,
+                    Name = r.Name,
+                    Type = r.Type,
+                    WorkingHours = r.WorkingHours
+                })
+                .ToList();
+        }
+
+        public void Delete(Restaurant restaurant)
+        {
+            repository.Delete(restaurant);
+            repository.SaveChanges();
+        }
+
+        public async Task<Restaurant> GetRestaurantById(int id)
+        {
+            var restaurant = await repository.AllReadOnly<Restaurant>().FirstOrDefaultAsync(r => r.Id == id);
+
+            return restaurant;
+        }
+
+        public bool CheckForPendingOrders(int restaurantId)
+        {
+            var orders = repository.AllReadOnly<Order>().Where(o => o.RestaurantId == restaurantId).ToList();
+
+            if(orders.Any())
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

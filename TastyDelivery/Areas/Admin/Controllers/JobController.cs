@@ -16,70 +16,85 @@ namespace TastyDelivery.Areas.Admin.Controllers
         private const string Separator = "\r\n";
         private readonly IAdminService adminService;
         private readonly IRestaurantService restaurantService;
-        private readonly IRepository repository;
         private readonly IDeliveryManService deliveryManService;
+        private readonly IOrderService orderService;
         public JobController(IAdminService _adminService,
             IRestaurantService _restaurantService, 
-            IRepository _repository,
-            IDeliveryManService _deliveryManService)
+            IDeliveryManService _deliveryManService,
+            IOrderService _orderService)
         {
             adminService = _adminService;
             restaurantService = _restaurantService;
-            repository = _repository;
             deliveryManService = _deliveryManService;
+            orderService = _orderService;
         }
 
+        [HttpGet]
         public IActionResult AddRestaurant()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateRestaurant(AddRestaurantFormViewModel model)
+        public IActionResult AddRestaurant(AddRestaurantFormViewModel model)
         {
-            var dbModel = adminService.CreateRestaurant(model.Name, model.WorkingHours, model.Location);
+            if (model.Name == null || model.WorkingHours == null || model.Location == null || model.Type == null)
+            {
+                ModelState.AddModelError("", "Please fill out all required fields.");
+                return View(model);
+            }
 
-            repository.AddNew(dbModel);
-            repository.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                adminService.CreateRestaurant(model);
 
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+            }
+            
+            return View(model);
         }
 
+        [HttpGet]
         public IActionResult AddMenu()
         {
             var model = restaurantService.GetAllRestaurants();
 
-            var modelToPass = model.Select(r => new RestaurantModel
+            var modelToPass = new RestaurantModel
             {
-                Id = r.Id,
-                Name = r.Name,
-            }).ToList();
+                Restaurants = model.ToList()
+            };
 
             return View(modelToPass);
         }
 
-        public async Task<IActionResult> UpdateMenu(int restaurantId, string menuItems)
+        [HttpPost]
+        public IActionResult AddMenu(RestaurantModel model)
         {
-            if (!string.IsNullOrEmpty(menuItems))
+            if(!ModelState.IsValid)
             {
-                string[] products = menuItems.Split(Separator);
-
-                foreach (var product in products)
-                { 
-                    string[] items = product.Split(',');
-
-                    string name = items[0];
-                    string description = items[1];
-                    Enum.TryParse(items[2], true, out ProductCategory category);
-                    double price = double.Parse(items[3]);
-
-                    var restaurantName = restaurantService.GetRestaurantName(restaurantId);
-
-                    var productToCreate = adminService.CreateProduct(restaurantId, name, description, category, price);
-
-                    repository.AddNew(productToCreate);
-                    await repository.SaveChanges();
+                if(model.RestaurantId == 0)
+                {
+                    ModelState.AddModelError("Restaurants", "No restaurant selected");
                 }
+
+
+                model.Restaurants = restaurantService.GetAllRestaurants().ToList();
+
+                return View(model);
+            }
+            
+            string[] products = model.MenuItems.Split(Separator);
+
+            foreach (var product in products)
+            {
+                string[] items = product.Split(',');
+
+                string name = items[0];
+                string description = items[1];
+                double price = double.Parse(items[2]);
+                Enum.TryParse(items[3], true, out ProductCategory category);
+
+                var productToCreate = adminService.CreateProduct(model.RestaurantId, name, description, category, price);
             }
 
             return RedirectToAction("Index", "Home");
@@ -94,8 +109,13 @@ namespace TastyDelivery.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AppointDriver(AppointDriverModel model)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             await adminService.CreateDriver(model);
-            return RedirectToAction("Index", "Home");   
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult CompletedDeliveries()
@@ -110,10 +130,20 @@ namespace TastyDelivery.Areas.Admin.Controllers
             return View(model);
         }
 
-
-        public IActionResult ToWebsite()
+        public async Task<IActionResult> DeleteRestaurant(int id)
         {
-            return RedirectToAction("Restaurants", "Restaurant");
+            var restaurant = await restaurantService.GetRestaurantById(id);
+
+            if (restaurantService.CheckForPendingOrders(id))
+            {
+                var orders = orderService.GetRestaurantsOrders(id);
+
+                return View("PendingOrdersError", orders);
+            }
+
+            restaurantService.Delete(restaurant);
+
+            return RedirectToAction("Restaurants", "Restaurant", new { area = "" });
         }
     }
 }

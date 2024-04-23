@@ -12,7 +12,7 @@ namespace TastyDelivery.Core.Contracts
 {
     public interface IAdminService
     {
-        public Restaurant CreateRestaurant(string name, string workingHours, string location);
+        public void CreateRestaurant(AddRestaurantFormViewModel model);
 
         public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price);
 

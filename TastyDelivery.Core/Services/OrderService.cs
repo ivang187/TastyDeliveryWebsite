@@ -49,6 +49,11 @@ namespace TastyDelivery.Core.Services
             return order;
         }
 
+        public List<Order> GetRestaurantsOrders(int id)
+        {
+            return repository.AllReadOnly<Order>().Where(r => r.RestaurantId == id).ToList();  
+        }
+
         public List<OrderDetailsViewModel> GetUserOrders(ApplicationUser user)
         {
             var orders = new List<OrderDetailsViewModel>();

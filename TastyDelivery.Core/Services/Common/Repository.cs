@@ -39,14 +39,19 @@ namespace TastyDelivery.Core.Services.Common
             context.Add(entity);
         }
 
-        public async Task SaveChanges()
-        {
-            await context.SaveChangesAsync();
-        }
-
         public void Update<T>(T entity) where T : class
         {
             GetDbSet<T>().Update(entity);
         }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            GetDbSet<T>().Remove(entity);
+        }
+
+        public async Task SaveChanges()
+        {
+            await context.SaveChangesAsync();
+        }    
     }
 }

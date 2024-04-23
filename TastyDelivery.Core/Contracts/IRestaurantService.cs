@@ -1,4 +1,5 @@
 ﻿using TastyDelivery.Core.Models.RestaurantModels;
+using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Models;
 using TastyDelivery.Models.RestaurantModels;
 
@@ -10,5 +11,15 @@ namespace TastyDelivery.Core.Contracts
         public IEnumerable<RestaurantsViewModel> GetAllRestaurants();
 
         public IEnumerable<RestaurantMenuViewModel> GetRestaurantMenu(int id);
+
+        public List<string> GetDistinctTypes();
+
+        public List<RestaurantsViewModel> GetRestaurantsByType(string type);
+
+        public void Delete(Restaurant restaurant);
+
+        public Task<Restaurant> GetRestaurantById(int id);
+
+        public bool CheckForPendingOrders(int restaurantId);
     }
 }

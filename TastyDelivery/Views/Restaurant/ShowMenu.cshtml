@@ -1,4 +1,5 @@
 ﻿@using TastyDelivery.Core.Models.RestaurantModels
+@using TastyDelivery.Infrastructure.Data.Models.Enums
 
 @model IEnumerable<RestaurantMenuViewModel>
 
@@ -21,15 +22,26 @@
                             <h4>@menuItem.ProductName - <span class="text-success">@menuItem.Price BGN</span></h4>
                             <p>@menuItem.Description</p>
                             <div class="input-group mb-3">
-                                <input type="number" id="quantity_@menuItem.ProductId" class="form-control" value="1" min="1" max="20" style="width: 6ch">
-                                <div class="input-group-append">
-                                    <button class="add-to-order-btn btn btn-primary"
-                                            data-restaurant-id="@menuItem.RestaurantId"
-                                            data-product-id="@menuItem.ProductId"
-                                            data-price="@menuItem.Price">
-                                        Add To Order
-                                    </button>
-                                </div>
+                                @if (User.IsInRole(UserRole.Customer.ToString()))
+                                {
+                                    <input type="number" id="quantity_@menuItem.ProductId" class="form-control" value="1" min="1" max="20" style="width: 6ch">
+                                    <div class="input-group-append">
+                                        <button class="add-to-order-btn btn btn-primary"
+                                                data-restaurant-id="@menuItem.RestaurantId"
+                                                data-product-id="@menuItem.ProductId"
+                                                data-price="@menuItem.Price">
+                                            Add To Order
+                                        </button>
+                                    </div>
+                                }
+                                @if (User.IsInRole(UserRole.Admin.ToString()))
+                                {
+                                    <a href="@Url.Action("UpdateExistingMenu", "Job", new {productId = menuItem.ProductId})" class="update-item-btn btn btn-secondary ml-2">
+                                        Update
+                                    </a>
+                                }
+                                    
+                                
                             </div>
                         </div>
                     }

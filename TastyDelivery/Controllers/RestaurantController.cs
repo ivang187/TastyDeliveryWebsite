@@ -13,9 +13,15 @@ namespace TastyDelivery.Controllers
         {
             _restaurantService = restaurantService;
         }
-        public IActionResult Restaurants()
+        public IActionResult Restaurants(string restaurantType)
         {
-            var model = _restaurantService.GetAllRestaurants();
+            if(restaurantType == null)
+            {
+                var allRestaurants = _restaurantService.GetAllRestaurants();
+                return View(allRestaurants);
+            }
+
+            var model = _restaurantService.GetRestaurantsByType(restaurantType);
 
             return View(model);
         }

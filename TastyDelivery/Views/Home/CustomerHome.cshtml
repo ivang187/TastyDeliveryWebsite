@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using TastyDelivery.Infrastructure.Data.Models.IdentityModels
+@inject UserManager<ApplicationUser> UserManager;
+
+@{
+    ViewData["Title"] = "Home";
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var user = await UserManager.FindByIdAsync(userId);
+}
+
+
+<div class="container">
+    <h1 class="text-center">Welcome @user.FirstName</h1>
+
+    <form action="@Url.Action("Restaurants", "Restaurant")" method="get">
+        <div class="form-row justify-content-center">
+            <div class="col-md-6">
+                <label for="restaurantType">Choose your restaurant type:</label>
+                <select name="restaurantType" id="restaurantType" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var type in ViewBag.RestaurantTypes)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Find Food</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+
+    label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+</style>

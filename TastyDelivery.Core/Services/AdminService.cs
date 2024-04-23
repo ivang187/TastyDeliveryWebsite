@@ -25,30 +25,44 @@ namespace TastyDelivery.Core.Services
             repository = _repository;
             userManager = _userManager;
         }
-        public Restaurant CreateRestaurant(string name, string workingHours, string location)
+        public void CreateRestaurant(AddRestaurantFormViewModel model)
         {
-            var model = new Restaurant
-            {
-                Name = name,
-                WorkingHours = workingHours,
-                Location = location
-            };
+            var restaurant = NewRestaurant(model);
 
-            return model;
+            repository.AddNew(restaurant);
+            repository.SaveChanges();
+        }
+
+        private Restaurant NewRestaurant(AddRestaurantFormViewModel model)
+        {
+            return new Restaurant
+            {
+                Name = model.Name,
+                Location = model.Location,
+                Type = model.Type,
+                WorkingHours = model.WorkingHours
+            };
         }
 
         public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price)
         {
             var product = new Product { Name = name, Description = description, Category = category };
 
-            var model = new ProductsRestaurants
+            var model = NewProduct(product, restaurantId, price);
+            repository.AddNew(model);
+            repository.SaveChanges();
+
+            return model;
+        }
+
+        private ProductsRestaurants NewProduct(Product product, int restaurantId, double price)
+        {
+            return new ProductsRestaurants
             {
                 RestaurantId = restaurantId,
                 Product = product,
-                Price = price
+                Price = price,
             };
-
-            return model;
         }
 
         public async Task CreateDriver(AppointDriverModel model)
@@ -95,6 +109,8 @@ namespace TastyDelivery.Core.Services
 
             var passwordHasher = new PasswordHasher<ApplicationUser>();
             user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
+
+            userManager.AddToRoleAsync(user, UserRole.DeliveryMan.ToString());
 
             return user;
         }

@@ -1,0 +1,17 @@
+﻿@using TastyDelivery.Infrastructure.Data.Models
+@model List<Order>
+
+<body>
+    <h1>Cannot Delete Restaurant</h1>
+    <p>Sorry, you cannot delete the restaurant while there are pending orders:</p>
+
+    @foreach (var order in Model)
+    {
+        <div>
+            <strong>Order ID:</strong> @order.Id<br />
+        </div>
+        <hr />
+    }
+
+    <p>Please fulfill or cancel the pending orders before attempting to delete the restaurant.</p>
+</body>

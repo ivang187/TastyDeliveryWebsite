@@ -22,5 +22,8 @@ namespace TastyDelivery.Infrastructure.Utilities.Constants
 
         public const int RestaurantLocationMaxLength = 80;
         public const int RestaurantLocationMinLength = 5;
+
+        public const int RestaurantTypeMinLength = 3;
+        public const int RestaurantTypeMaxLength = 30;
     }
 }
