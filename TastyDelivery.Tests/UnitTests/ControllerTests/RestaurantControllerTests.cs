@@ -32,15 +32,17 @@ namespace TastyDelivery.Tests.UnitTests.ControllerTests
                     Id = 1,
                     Name = "Test Restaurant",
                     Location = "123 St.",
-                    WorkingHours = "8:00-14:00"
+                    WorkingHours = "8:00-14:00",
+                    Type = "Test Type"
                 }
             };
 
-            var restaurantType = "Bar & Dinner";
+            var expectedType = "Test Type";
 
             restaurantService.Setup(s => s.GetAllRestaurants()).Returns(expectedModel);
+            restaurantService.Setup(r => r.GetRestaurantsByType(expectedType)).Returns(expectedModel);
 
-            var result = controller.Restaurants(restaurantType) as ViewResult;
+            var result = controller.Restaurants(expectedType) as ViewResult;
 
             Assert.IsNotNull(result);
             Assert.That(result.Model, Is.InstanceOf<IEnumerable<RestaurantsViewModel>>());

@@ -201,5 +201,31 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             Assert.That(result.Count, Is.EqualTo(2));
             Assert.IsTrue(result.All(order => order.User.Id == user.Id));
         }
+
+        [Test]
+        public void GetRestaurantsOrders_ReturnsOrdersForGivenRestaurantId()
+        {
+            int restaurantId = 1;
+            var mockOrders = new List<Order>
+            {
+                new Order { Id = 1, RestaurantId = restaurantId },
+                new Order { Id = 2, RestaurantId = restaurantId },
+                new Order { Id = 3, RestaurantId = 2 } 
+            };
+
+            repository.Setup(r => r.AllReadOnly<Order>())
+                          .Returns(mockOrders.AsQueryable());
+
+            var result = orderService.GetRestaurantsOrders(restaurantId);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.Count, Is.EqualTo(2)); 
+
+
+            foreach (var order in result)
+            {
+                Assert.That(order.RestaurantId, Is.EqualTo(restaurantId));
+            }
+        }
     }
 }

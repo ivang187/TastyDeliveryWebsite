@@ -14,7 +14,10 @@
     var user = await UserManager.FindByIdAsync(userId);
 }
 
-<h1 class="text-center mb-4">Welcome to Tasty Delivery, @user.FirstName</h1>
+@if(user.Role == UserRole.Customer)
+{
+    <h1 class="text-center mb-4">Welcome to Tasty Delivery, @user.FirstName</h1>
+}
 
 <div class="container">
     <div class="d-flex align-items-end justify-content-center mb-4">

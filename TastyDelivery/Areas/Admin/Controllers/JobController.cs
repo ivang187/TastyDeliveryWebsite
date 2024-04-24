@@ -30,14 +30,14 @@ namespace TastyDelivery.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddRestaurant(int id)
+        public IActionResult AddRestaurant(int id)
         {
             if(id == 0)
             {
                 return View();
             }
             
-            var restaurant = await restaurantService.GetRestaurantById(id);
+            var restaurant = restaurantService.GetRestaurantById(id);
             var model = new AddRestaurantFormViewModel
             {
                 Location = restaurant.Location,
@@ -177,9 +177,9 @@ namespace TastyDelivery.Areas.Admin.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> DeleteRestaurant(int id)
+        public IActionResult DeleteRestaurant(int id)
         {
-            var restaurant = await restaurantService.GetRestaurantById(id);
+            var restaurant = restaurantService.GetRestaurantById(id);
 
             if (restaurantService.CheckForPendingOrders(id))
             {

@@ -17,13 +17,10 @@ namespace TastyDelivery.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IRestaurantService _restaurantService;
 
-        public HomeController(ILogger<HomeController> logger,
-            IRestaurantService restaurantService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _restaurantService = restaurantService;
         }
 
         public IActionResult Index()

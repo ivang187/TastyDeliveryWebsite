@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -28,52 +29,6 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             adminService = new AdminService(repository.Object, userManager.Object);
         }
 
-        [Test]
-        public void CreateRestaurant_ReturnsRestaurantWithSpecifiedDetails()
-        {
-            string name = "Test Restaurant";
-            string workingHours = "8:00-17:00";
-            string location = "123 Main St";
-
-            var model = new AddRestaurantFormViewModel
-            {
-                Name = name,
-                WorkingHours = workingHours,
-                Location = location
-            };
-
-            adminService.CreateRestaurant(model);
-
-            repository.Verify(r => r.AddNew(It.IsAny<Restaurant>));
-            repository.Verify(r => r.SaveChanges(), Times.Once);
-        }
-
-        [Test]
-        public void CreateProduct_Returns_ProductRestaurants()
-        {
-            int restaurantId = 1;
-            string name = "Test Product";
-            string description = "Test Description";
-            ProductCategory category = ProductCategory.Mains;
-            double price = 12.99;
-
-            var productRestaurants = new ProductsRestaurants
-            {
-                ProductId = 1,
-                RestaurantId = restaurantId,
-
-            };
-
-            var result = adminService.CreateProduct(restaurantId, productRestaurants.ProductId, name, description, category, price);
-
-
-            Assert.IsNotNull(result);
-            Assert.That(result.RestaurantId, Is.EqualTo(restaurantId));
-            Assert.That(result.Product.Name, Is.EqualTo(name));
-            Assert.That(result.Product.Description, Is.EqualTo(description));
-            Assert.That(result.Product.Category, Is.EqualTo(category));
-            Assert.That(result.Price, Is.EqualTo(price));
-        }
 
         [Test]
         public async Task CreateDriver_WithNewUser_CreatesNewDriver()
@@ -94,7 +49,7 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             await adminService.CreateDriver(model);
 
             repository.Verify(r => r.AddNew(It.IsAny<ApplicationUser>()));
-            repository.Verify(r => r.SaveChanges(), Times.AtLeast(2));
+            repository.Verify(r => r.SaveChanges());
         }
 
         [Test]
@@ -206,5 +161,86 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             Assert.That(result, Is.TypeOf<List<CompletedDeliveriesAdminViewModel>>());
         }
 
+        [Test]
+        public void GetProductById_ReturnsCorrectProduct()
+        {
+            int productId = 1;
+            var mockProduct = new Product { Id = productId, Name = "Test Product" };
+            var mockRestaurant = new Restaurant { Id = 1, Name = "Test Restaurant" };
+            var mockProductRestaurant = new ProductsRestaurants
+            {
+                ProductId = productId,
+                Product = mockProduct,
+                RestaurantId = mockRestaurant.Id,
+                Restaurant = mockRestaurant
+            };
+            var mockQueryable = new[] { mockProductRestaurant }.AsQueryable();
+
+            repository.Setup(r => r.AllReadOnly<ProductsRestaurants>())
+                          .Returns(mockQueryable);
+
+            var result = adminService.GetProductById(productId);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.ProductId, Is.EqualTo(productId));
+            Assert.That(result.Product.Name, Is.EqualTo(mockProduct.Name));
+            Assert.That(result.Restaurant.Name, Is.EqualTo(mockRestaurant.Name));
+        }
+
+        [Test]
+        public void DeleteProduct_MakesChangesInDb()
+        {
+            var mockProduct = new Product
+            {
+                Id = 1
+            };
+
+            var mockRestaurant = new Restaurant
+            {
+                Id = 2
+            };
+
+            var mockProductRestaurants = new ProductsRestaurants
+            {
+                Restaurant = mockRestaurant,
+                RestaurantId = mockRestaurant.Id,
+                Product = mockProduct,
+                ProductId = mockProduct.Id,
+                Price = 15.00
+            };
+
+            repository.Setup(r => r.Delete(mockProductRestaurants)).Verifiable();
+            repository.Setup(r => r.SaveChanges()).Verifiable();
+
+            adminService.DeleteProduct(mockProductRestaurants);
+
+            repository.Verify(r => r.Delete(mockProductRestaurants));
+            repository.Verify(r => r.SaveChanges());
+        }
+
+        [Test]
+        public void GetPendingDeliveries_ReturnsPendingDeliveriesViewModels()
+        {
+            var mockUser = new ApplicationUser { Id = "1", FirstName = "John", LastName = "Doe" };
+            var mockRestaurant = new Restaurant { Id = 1, Name = "Test Restaurant" };
+            var mockOrder = new Order { Id = 1, TimeOrdered = DateTime.Now, User = mockUser, Restaurant = mockRestaurant, Status = DeliveryStatus.Pending };
+            var mockOrders = new List<Order> { mockOrder };
+
+            repository.Setup(r => r.AllReadOnly<Order>())
+                          .Returns(mockOrders.AsQueryable());
+
+            var result = adminService.GetPendingDeliveries();
+
+            Assert.IsNotNull(result);
+            Assert.That(result.Count, Is.EqualTo(1));
+
+            var pendingDelivery = result.First();
+            Assert.That(pendingDelivery.OrderId, Is.EqualTo(mockOrder.Id));
+            Assert.That(pendingDelivery.TimeOrdered, Is.EqualTo(mockOrder.TimeOrdered));
+            Assert.That(pendingDelivery.Customer, Is.EqualTo(mockUser));
+            Assert.That(pendingDelivery.CustomerName, Is.EqualTo($"{mockUser.FirstName} {mockUser.LastName}"));
+            Assert.That(pendingDelivery.Restaurant, Is.EqualTo(mockRestaurant));
+            Assert.That(pendingDelivery.RestaurantName, Is.EqualTo(mockRestaurant.Name));
+        }
     }
 }

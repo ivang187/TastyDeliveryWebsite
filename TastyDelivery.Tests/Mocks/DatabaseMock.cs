@@ -16,6 +16,7 @@ namespace TastyDelivery.Tests.Mocks
             {
                 var dbContextOptions = new DbContextOptionsBuilder<TastyDeliveryDbContext>()
                     .UseInMemoryDatabase("TastyDeliveryInMemoryDb" + DateTime.Now.Ticks.ToString())
+                    .EnableSensitiveDataLogging()
                     .Options;
                     
                 return new TastyDeliveryDbContext(dbContextOptions, false);

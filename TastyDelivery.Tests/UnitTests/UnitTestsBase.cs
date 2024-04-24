@@ -37,10 +37,11 @@ namespace TastyDelivery.Tests.UnitTests
         public OrderProducts OrderProducts { get; private set; }
 
         public ProductsRestaurants ProductsRestaurants { get; private set; }
+
         private void SeedDatabase()
         {
             Customer = new ApplicationUser()
-            { 
+            {
                 Id = "fsfwerw0fwew-wg0923r23fwdsdfs",
                 Email = "ivan187@gmail.com",
                 FirstName = "Ivan",
@@ -71,7 +72,7 @@ namespace TastyDelivery.Tests.UnitTests
                 DeliveryManId = "duwefhiwfjasdkfasf-qwqwrqf",
                 HomeAddress = "Polqna 1, Samokov"
             };
-            
+
             context.Orders.Add(Order);
 
             Product = new Product()
@@ -89,7 +90,8 @@ namespace TastyDelivery.Tests.UnitTests
                 Id = 2,
                 Name = "Sote",
                 Location = "Gradina 2, Samokov",
-                WorkingHours = "8:00-23:00"
+                WorkingHours = "8:00-23:00",
+                Type = "Mehana"
             };
 
             context.Restaurants.Add(Restaurant);
@@ -115,7 +117,7 @@ namespace TastyDelivery.Tests.UnitTests
 
             context.ProductsRestaurants.Add(ProductsRestaurants);
 
-            context.SaveChanges();  
+            context.SaveChanges();
         }
 
         [OneTimeTearDown]

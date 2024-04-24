@@ -89,9 +89,9 @@ namespace TastyDelivery.Core.Services
             repository.SaveChanges();
         }
 
-        public async Task<Restaurant> GetRestaurantById(int id)
+        public Restaurant GetRestaurantById(int id)
         {
-            var restaurant = await repository.AllReadOnly<Restaurant>().FirstOrDefaultAsync(r => r.Id == id);
+            var restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Id == id);
 
             return restaurant;
         }

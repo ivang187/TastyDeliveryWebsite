@@ -19,7 +19,7 @@ namespace TastyDelivery.Core.Contracts
 
         public void Delete(Restaurant restaurant);
 
-        public Task<Restaurant> GetRestaurantById(int id);
+        public Restaurant GetRestaurantById(int id);
 
         public bool CheckForPendingOrders(int restaurantId);
 

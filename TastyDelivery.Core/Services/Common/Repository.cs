@@ -41,7 +41,6 @@ namespace TastyDelivery.Core.Services.Common
 
         public void Update<T>(T entity) where T : class
         {
-
             GetDbSet<T>().Update(entity);
         }
 
