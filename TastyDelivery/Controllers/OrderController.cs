@@ -74,18 +74,18 @@ namespace TastyDelivery.Controllers
         {
             var productsJson = HttpContext.Request.Form["ProductsData"];
             model.Products = JsonConvert.DeserializeObject<List<CartItemViewModel>>(productsJson);
-
             var restaurantJson = HttpContext.Request.Form["RestaurantData"];
+
             model.Restaurant = JsonConvert.DeserializeObject<Restaurant>(restaurantJson);
             model.RestaurantName = model.Restaurant.Name;
             model.User = await GetUser();
 
             CheckSaveInfo(model, saveInfo, model.User);
-
             var order = await orderService.CreateOrder(model);
             HttpContext.Session.Remove($"Cart_{User.FindFirst(ClaimTypes.NameIdentifier)?.Value}");
 
             return RedirectToAction("OrderDetails", "Order");
+        
         }
 
         public async Task<IActionResult> OrderDetails()

@@ -1,45 +1,95 @@
-﻿@using TastyDelivery.Infrastructure.Data.Models.Enums
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@using TastyDelivery.Infrastructure.Data.Models.Enums
+@using TastyDelivery.Infrastructure.Data.Models.IdentityModels
 @using TastyDelivery.Models.RestaurantModels
+
+@inject UserManager<ApplicationUser> UserManager
 
 @model IEnumerable<RestaurantsViewModel>
 
 @{
     ViewBag.Title = "Restaurants";
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var user = await UserManager.FindByIdAsync(userId);
 }
 
+<h1 class="text-center mb-4">Welcome to Tasty Delivery, @user.FirstName</h1>
+
 <div class="container">
-    <div class="text-center mb-5">
-        <h1 class="mb-4 display-1">Choose Your Restaurant</h1>
+    <div class="d-flex align-items-end justify-content-center mb-4">
+        <div class="col-md-6 align-content-center">
+            <label for="restaurantType" class="font-weight-bold">Choose your restaurant type:</label>
+            <select name="restaurantType" id="restaurantType" class="form-control">
+                <option value="all">All</option>
+                @foreach (var type in ViewBag.RestaurantTypes)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" id="filterBtn" class="btn btn-primary btn-block">Find Food</button>
+        </div>
     </div>
 
-    <div class="row justify-content-center">
-        @foreach (var restaurant in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card shadow">
-                    <a href="@Url.Action("ShowMenu", "Restaurant", new { id = restaurant.Id})" class="text-decoration-none text-dark stretched-link"></a>
-                    <div class="card-body">
-                        <h4 class="card-title mb-3">@restaurant.Name</h4>
-                        <h4 class="card-title mb3">@restaurant.Type</h4>
-                        <p class="card-text mb-2"><strong>Location:</strong> @restaurant.Location</p>
-                        <p class="card-text mb-2"><strong>Working Hours:</strong> @restaurant.WorkingHours</p>
+    @if(Model == null || !Model.Any())
+    {      
+    }
+    else
+    {
+        <h2 class="mb-4 text-center">Choose Your Restaurant</h2>
+        <div class="row">
+            @foreach (var restaurant in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow">
+                        <a href="@Url.Action("ShowMenu", "Restaurant", new { id = restaurant.Id})" class="text-decoration-none text-dark stretched-link"></a>
+                        <div class="card-body">
+                            <h4 class="card-title mb-3">@restaurant.Name</h4>
+                            <h4 class="card-title mb-3">@restaurant.Type</h4>
+                            <p class="card-text mb-2"><strong>Location:</strong> @restaurant.Location</p>
+                            <p class="card-text mb-2"><strong>Working Hours:</strong> @restaurant.WorkingHours</p>
+                        </div>
                     </div>
+                    @if (User.IsInRole(UserRole.Admin.ToString()))
+                    {
+                        <div class="card-footer">
+                            <button onclick="updateRestaurant('@Url.Action("AddRestaurant", "Job", new  { area = UserRole.Admin.ToString()})', @restaurant.Id)" class="btn btn-secondary btn-sm">Update</button>
+                            <button onclick="deleteRestaurant('@Url.Action("DeleteRestaurant", "Job", new { area = UserRole.Admin.ToString() })', @restaurant.Id)" class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    }
                 </div>
-                @if (User.IsInRole(UserRole.Admin.ToString()))
-                {
-                    <button onclick="updateRestaurant('@Url.Action("UpdateRestaurant", "Job", new { area = UserRole.Admin.ToString() })', @restaurant.Id)" class="btn btn-secondary mt-2">Update</button>
-                    <button onclick="deleteRestaurant('@Url.Action("DeleteRestaurant", "Job", new { area = UserRole.Admin.ToString() })', @restaurant.Id)" class="btn btn-danger mt-2">Delete</button>
-                }
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>
 
 <style>
-    .card:hover {
-        transform: translateY(-5px);
-        transition: transform 0.3s ease-in-out;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+
+    .card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .btn-secondary,
+    .btn-danger {
+        margin-top: 10px;
     }
 </style>
 
@@ -53,4 +103,10 @@
             window.location.href = url + '?id=' + id;
         }
     }
+
+    document.getElementById("filterBtn").addEventListener("click", function () {
+        var restaurantType = document.getElementById("restaurantType").value;
+        var url = "@Url.Action("Restaurants", "Restaurant")?restaurantType=" + encodeURIComponent(restaurantType);
+        window.location.href = url;
+    });
 </script>

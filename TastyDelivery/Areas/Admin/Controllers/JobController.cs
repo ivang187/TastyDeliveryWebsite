@@ -30,9 +30,24 @@ namespace TastyDelivery.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddRestaurant()
+        public async Task<IActionResult> AddRestaurant(int id)
         {
-            return View();
+            if(id == 0)
+            {
+                return View();
+            }
+            
+            var restaurant = await restaurantService.GetRestaurantById(id);
+            var model = new AddRestaurantFormViewModel
+            {
+                Location = restaurant.Location,
+                Name = restaurant.Name,
+                WorkingHours = restaurant.WorkingHours,
+                Type = restaurant.Type,
+            };
+            
+
+            return View(model);
         }
 
         [HttpPost]
@@ -44,18 +59,20 @@ namespace TastyDelivery.Areas.Admin.Controllers
                 return View(model);
             }
 
-            if (ModelState.IsValid)
+            if (restaurantService.CheckIfRestaurantExists(model.Name))
+            {
+                restaurantService.Update(model);
+            }
+            else
             {
                 adminService.CreateRestaurant(model);
-
-                return RedirectToAction("Index", "Home");
             }
-            
-            return View(model);
+                    
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
-        public IActionResult AddMenu()
+        public IActionResult AddMenu(int id)
         {
             var model = restaurantService.GetAllRestaurants();
 
@@ -64,7 +81,20 @@ namespace TastyDelivery.Areas.Admin.Controllers
                 Restaurants = model.ToList()
             };
 
+            if (id == 0)
+            {
+                return View(modelToPass);
+            }
+
+            var product = adminService.GetProductById(id);
+
+            modelToPass.MenuItems = $"{product.Product.Name}- {product.Product.Description}- {product.Price}- {product.Product.Category}";
+            modelToPass.ProductId = product.ProductId;
+            modelToPass.RestaurantId = product.RestaurantId;
+            modelToPass.RestaurantName = product.Restaurant.Name;
+
             return View(modelToPass);
+            
         }
 
         [HttpPost]
@@ -87,14 +117,19 @@ namespace TastyDelivery.Areas.Admin.Controllers
 
             foreach (var product in products)
             {
-                string[] items = product.Split(',');
+                string[] items = product.Split('-');
+
+                if (items.Length != 4)
+                {
+                    continue;
+                }
 
                 string name = items[0];
                 string description = items[1];
                 double price = double.Parse(items[2]);
                 Enum.TryParse(items[3], true, out ProductCategory category);
 
-                var productToCreate = adminService.CreateProduct(model.RestaurantId, name, description, category, price);
+                var productToCreate = adminService.CreateProduct(model.RestaurantId, model.ProductId, name, description, category, price);
             }
 
             return RedirectToAction("Index", "Home");
@@ -130,6 +165,18 @@ namespace TastyDelivery.Areas.Admin.Controllers
             return View(model);
         }
 
+        public IActionResult PendingDeliveries()
+        {
+            var model = adminService.GetPendingDeliveries();
+
+            if(model == null)
+            {
+                return View();
+            }
+
+            return View(model);
+        }
+
         public async Task<IActionResult> DeleteRestaurant(int id)
         {
             var restaurant = await restaurantService.GetRestaurantById(id);
@@ -145,5 +192,15 @@ namespace TastyDelivery.Areas.Admin.Controllers
 
             return RedirectToAction("Restaurants", "Restaurant", new { area = "" });
         }
+
+        public IActionResult DeleteMenuProduct(int id) 
+        {
+            var product = adminService.GetProductById(id);
+
+            adminService.DeleteProduct(product);
+
+            return RedirectToAction("Restaurants", "Restaurant", new { area = "" });
+        }
+
     }
 }

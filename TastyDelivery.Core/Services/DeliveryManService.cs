@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,12 +97,21 @@ namespace TastyDelivery.Core.Services
             return repository.AllReadOnly<Order>().FirstOrDefault(o => o.Id == orderId);
         }
 
-        public AssignedOrdersViewModel CreateAssignedOrderModel(int orderId)
+        public AssignedOrdersViewModel CreateAssignedOrderModel(int orderId, List<OrderProducts> products)
         {
             var order = FindOrderById(orderId);
             var user = repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Id == order.UserId);
             var restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Id == order.RestaurantId);
             var deliveryMan = repository.AllReadOnly<ApplicationUser>().FirstOrDefault(u => u.Id == order.DeliveryManId);
+            var productCartItem = new List<CartItemViewModel>();
+
+            foreach (var product in products)
+            {
+                productCartItem.Add(new CartItemViewModel
+                {
+                    Name = product.Product.Name
+                });
+            }
 
             return new AssignedOrdersViewModel
             {
@@ -117,10 +127,7 @@ namespace TastyDelivery.Core.Services
                 OrderTaken = DateTime.Now,
                 PhoneNumber = order.PhoneNumber,
                 TotalPrice = order.TotalPrice,
-                Products = order.Products.Select(p => new CartItemViewModel
-                {
-                    Name = p.Product.Name
-                }).ToList()
+                Products = productCartItem
             };
         }
 
@@ -141,7 +148,7 @@ namespace TastyDelivery.Core.Services
                 {
                     if (order.Status == DeliveryStatus.OutForDelivery)
                     {
-                        var item = CreateAssignedOrderModel(order.Id);
+                        var item = CreateAssignedOrderModel(order.Id, order.Products.ToList());
                         model.Add(item);
                     }
                 }

@@ -35,12 +35,17 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             string workingHours = "8:00-17:00";
             string location = "123 Main St";
 
-            var restaurant = adminService.CreateRestaurant(name, workingHours, location);
+            var model = new AddRestaurantFormViewModel
+            {
+                Name = name,
+                WorkingHours = workingHours,
+                Location = location
+            };
 
-            Assert.IsNotNull(restaurant);
-            Assert.That(restaurant.Name, Is.EqualTo(name));
-            Assert.That(restaurant.WorkingHours, Is.EqualTo(workingHours));
-            Assert.That(restaurant.Location, Is.EqualTo(location));
+            adminService.CreateRestaurant(model);
+
+            repository.Verify(r => r.AddNew(It.IsAny<Restaurant>));
+            repository.Verify(r => r.SaveChanges(), Times.Once);
         }
 
         [Test]
@@ -52,7 +57,14 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             ProductCategory category = ProductCategory.Mains;
             double price = 12.99;
 
-            var result = adminService.CreateProduct(restaurantId, name, description, category, price);
+            var productRestaurants = new ProductsRestaurants
+            {
+                ProductId = 1,
+                RestaurantId = restaurantId,
+
+            };
+
+            var result = adminService.CreateProduct(restaurantId, productRestaurants.ProductId, name, description, category, price);
 
 
             Assert.IsNotNull(result);

@@ -1,0 +1,64 @@
+﻿@using TastyDelivery.Core.Models.AdminModels
+
+@model List<PendingDeliveriesViewModel>
+
+@{
+    var groupedDeliveries = Model.GroupBy(d => d.RestaurantName);
+}
+
+<h2>Pending Deliveries</h2>
+
+@if(Model.Count == 0)
+{
+    <p>Currently there are no pending deliveries!</p>
+}
+else
+{
+    @foreach (var group in groupedDeliveries)
+    {
+        <div class="restaurant-group">
+            <h3>@group.Key</h3>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Delivery ID</th>
+                            <th>Restaurant</th>
+                            <th>Client Name</th>
+                            <th>Order Made</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var delivery in group)
+                        {
+                            <tr>
+                                <td>@delivery.OrderId</td>
+                                <td>@delivery.RestaurantName</td>
+                                <td>@delivery.CustomerName</td>
+                                <td>@delivery.TimeOrdered</td>                             
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+
+
+<style>
+    .restaurant-group {
+        margin-bottom: 20px;
+    }
+
+        .restaurant-group h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>

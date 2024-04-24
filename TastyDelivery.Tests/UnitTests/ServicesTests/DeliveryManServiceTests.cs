@@ -141,6 +141,19 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
                 Restaurant = new Restaurant { Id = 1, Name = "Sote" }
             };
 
+            var orderProducts = new List<OrderProducts>
+            { 
+                new OrderProducts
+                {
+                    Product = new Product { Name = "Test1"}
+                },
+                new OrderProducts
+                {
+                    Product = new Product { Name = "Test2"}
+                }
+                
+            };
+
             var mockRestaurant = new Restaurant { Id = 1, Name = "TestRes" };
 
             repository.Setup(r => r.AllReadOnly<Order>())
@@ -150,7 +163,7 @@ namespace TastyDelivery.Tests.UnitTests.ServicesTests
             repository.Setup(r => r.AllReadOnly<Restaurant>())
                 .Returns(new List<Restaurant> { mockRestaurant }.AsQueryable());
 
-            var result = service.CreateAssignedOrderModel(order.Id);
+            var result = service.CreateAssignedOrderModel(order.Id, orderProducts);
 
             Assert.IsNotNull(result);
             Assert.That(result, Is.TypeOf<AssignedOrdersViewModel>());

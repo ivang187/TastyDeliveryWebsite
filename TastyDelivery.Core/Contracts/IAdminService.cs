@@ -14,10 +14,16 @@ namespace TastyDelivery.Core.Contracts
     {
         public void CreateRestaurant(AddRestaurantFormViewModel model);
 
-        public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price);
+        public ProductsRestaurants CreateProduct(int restaurantId, int productId, string name, string description, ProductCategory category, double price);
 
         public Task CreateDriver(AppointDriverModel model);
 
         public List<CompletedDeliveriesAdminViewModel> GetCompletedDeliveries();
+
+        public ProductsRestaurants GetProductById(int id);
+
+        public void DeleteProduct(ProductsRestaurants product);
+
+        public List<PendingDeliveriesViewModel> GetPendingDeliveries();
     }
 }

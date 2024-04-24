@@ -44,25 +44,63 @@ namespace TastyDelivery.Core.Services
             };
         }
 
-        public ProductsRestaurants CreateProduct(int restaurantId, string name, string description, ProductCategory category, double price)
+        public ProductsRestaurants CreateProduct(int restaurantId, int productId, string name, string description, ProductCategory category, double price)
         {
-            var product = new Product { Name = name, Description = description, Category = category };
+            if (productId == 0)
+            {
+                var product = new Product { Name = name, Category = category, Description = description };
+                var model = NewProduct(product, restaurantId, price);
+                repository.AddNew(model);
+                repository.SaveChanges();
+                return model;
+            }
+            else
+            {
+                var product = repository.AllReadOnly<Product>().FirstOrDefault(p => p.Id == productId);
 
-            var model = NewProduct(product, restaurantId, price);
-            repository.AddNew(model);
-            repository.SaveChanges();
+                var model = ExistingProduct(product, restaurantId, price);
 
-            return model;
+                if (!repository.AllReadOnly<ProductsRestaurants>().Contains(model))
+                {
+                    repository.AddNew(model);
+                }
+
+                product.Category = category;
+                product.Description = description;
+                product.Name = name;
+                model.Price = price;
+
+                repository.Update(product);
+                repository.SaveChanges();
+
+                return model;
+            }
+        }
+
+        private ProductsRestaurants ExistingProduct(Product product, int restaurantId, double price)
+        {
+            var productRestaurants = repository.AllReadOnly<ProductsRestaurants>()
+                .Select(pr => new ProductsRestaurants
+                {
+                    Product = product,
+                    ProductId = product.Id,
+                    Price = price,
+                    RestaurantId = restaurantId
+                }).FirstOrDefault();
+
+            return productRestaurants;
         }
 
         private ProductsRestaurants NewProduct(Product product, int restaurantId, double price)
         {
-            return new ProductsRestaurants
+            var productRestaurants = new ProductsRestaurants
             {
                 RestaurantId = restaurantId,
                 Product = product,
                 Price = price,
             };
+
+            return productRestaurants;
         }
 
         public async Task CreateDriver(AppointDriverModel model)
@@ -154,6 +192,43 @@ namespace TastyDelivery.Core.Services
                 User = user,
                 UserName = user.FirstName + " " + user.LastName,
             };
+        }
+
+        public ProductsRestaurants GetProductById(int id)
+        {
+            var item = repository.AllReadOnly<ProductsRestaurants>()
+                .Include(p => p.Product)
+                .Include(r => r.Restaurant)
+                .FirstOrDefault(p => p.ProductId == id);
+
+            return item;
+        }
+
+        public void DeleteProduct(ProductsRestaurants product)
+        {
+            repository.Delete(product);
+            repository.SaveChanges();
+        }
+
+        public List<PendingDeliveriesViewModel> GetPendingDeliveries()
+        {
+            var model = repository.AllReadOnly<Order>()
+                .Include(r => r.Restaurant)
+                .Include(u => u.User)
+                .Where(o => o.Status == DeliveryStatus.Pending)
+                .Select(o => new PendingDeliveriesViewModel
+                {
+                    Order = o,
+                    OrderId = o.Id,
+                    TimeOrdered = o.TimeOrdered,
+                    Customer = o.User,
+                    CustomerName = o.User.FirstName + " " + o.User.LastName,
+                    Restaurant = o.Restaurant,
+                    RestaurantName = o.Restaurant.Name
+                })
+                .ToList();
+
+            return model;
         }
     }
 }

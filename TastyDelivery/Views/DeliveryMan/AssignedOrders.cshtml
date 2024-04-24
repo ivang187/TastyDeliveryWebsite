@@ -16,11 +16,11 @@
                             <p class="card-text">Delivery Address: @order.Address</p>
                             <p class="card-text">Phone Number: @order.PhoneNumber</p>
                             <p class="card-text">Time Ordered: @order.OrderTaken</p>
-                            <p class="card-text">Expected Delivery: @order.ExpectedDelivery</p>
+                            <p class="card-text">Expected Delivery: @order.OrderTaken.AddMinutes(20)</p>
                             <p class="card-text">Assigned To: @order.DeliveryManFullName</p>
                             <p class="card-text">Restaurant: @order.RestaurantName</p>
                             <p class="card-text">Products:</p>
-                            <ul class="list-group">
+                            <ul class="text-decoration-none">
                                 @foreach (var product in order.Products)
                                 {
                                     <li>@product.Name</li>

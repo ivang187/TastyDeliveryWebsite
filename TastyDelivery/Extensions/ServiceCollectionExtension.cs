@@ -32,9 +32,9 @@ namespace TastyDelivery.Core.Services.Extensions
             var connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found");
 
             services.AddDbContext<TastyDeliveryDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
 
-            services.AddTransient<IRepository, Repository>();
+            services.AddScoped<IRepository, Repository>();
 
             return services;
         }

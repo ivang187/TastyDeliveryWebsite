@@ -11,6 +11,8 @@ using TastyDelivery.Core.Services.Common;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using TastyDelivery.Core.Models.AdminModels;
+using TastyDelivery.Infrastructure.Data.Models.Enums;
 
 namespace TastyDelivery.Core.Services
 {
@@ -96,7 +98,7 @@ namespace TastyDelivery.Core.Services
 
         public bool CheckForPendingOrders(int restaurantId)
         {
-            var orders = repository.AllReadOnly<Order>().Where(o => o.RestaurantId == restaurantId).ToList();
+            var orders = repository.AllReadOnly<Order>().Where(o => o.RestaurantId == restaurantId && o.Status == DeliveryStatus.Pending).ToList();
 
             if(orders.Any())
             {
@@ -104,6 +106,30 @@ namespace TastyDelivery.Core.Services
             }
 
             return false;
+        }
+
+        public bool CheckIfRestaurantExists(string name)
+        {
+            var restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Name == name);
+
+            if(restaurant == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void Update(AddRestaurantFormViewModel model)
+        {
+            var restaurant = repository.AllReadOnly<Restaurant>().FirstOrDefault(r => r.Name == model.Name);
+
+            restaurant.WorkingHours = model.WorkingHours;
+            restaurant.Location = model.Location;
+            restaurant.Type = model.Type;
+
+            repository.Update(restaurant);
+            repository.SaveChanges();
         }
     }
 }

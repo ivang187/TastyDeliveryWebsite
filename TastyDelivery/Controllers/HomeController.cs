@@ -39,17 +39,9 @@ namespace TastyDelivery.Controllers
                     return RedirectToAction("Index", "DeliveryMan");
                 }
 
-                return RedirectToAction(nameof(CustomerHome));
+                return RedirectToAction("Restaurants", "Restaurant");
             }
 
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult CustomerHome() 
-        {
-            var restaurantTypes = _restaurantService.GetDistinctTypes();
-            ViewBag.RestaurantTypes = restaurantTypes;
             return View();
         }
 

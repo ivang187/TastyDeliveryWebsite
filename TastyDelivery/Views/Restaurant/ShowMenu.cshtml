@@ -36,12 +36,9 @@
                                 }
                                 @if (User.IsInRole(UserRole.Admin.ToString()))
                                 {
-                                    <a href="@Url.Action("UpdateExistingMenu", "Job", new {productId = menuItem.ProductId})" class="update-item-btn btn btn-secondary ml-2">
-                                        Update
-                                    </a>
-                                }
-                                    
-                                
+                                    <a href="@Url.Action("AddMenu", "Job", new { area = UserRole.Admin.ToString(), id = menuItem.ProductId})" class="btn btn-secondary">Update</a>
+                                    <button onclick="deleteProduct('@Url.Action("DeleteMenuProduct", "Job", new { area = UserRole.Admin.ToString() })', @menuItem.ProductId)" class="btn btn-danger">Delete</button>
+                                }                              
                             </div>
                         </div>
                     }
@@ -153,6 +150,12 @@
                 xhr.send(data);
             });
         });
+
+        function deleteProduct(url, id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                window.location.href = url + '?id=' + id;
+            }
+        }
     </script>
 }
 

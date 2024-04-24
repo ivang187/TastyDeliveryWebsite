@@ -1,4 +1,5 @@
-﻿using TastyDelivery.Core.Models.RestaurantModels;
+﻿using TastyDelivery.Core.Models.AdminModels;
+using TastyDelivery.Core.Models.RestaurantModels;
 using TastyDelivery.Infrastructure.Data.Models;
 using TastyDelivery.Models;
 using TastyDelivery.Models.RestaurantModels;
@@ -21,5 +22,9 @@ namespace TastyDelivery.Core.Contracts
         public Task<Restaurant> GetRestaurantById(int id);
 
         public bool CheckForPendingOrders(int restaurantId);
+
+        public bool CheckIfRestaurantExists(string name);
+
+        public void Update(AddRestaurantFormViewModel model);
     }
 }

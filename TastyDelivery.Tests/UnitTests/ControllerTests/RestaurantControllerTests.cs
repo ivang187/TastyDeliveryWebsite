@@ -36,9 +36,11 @@ namespace TastyDelivery.Tests.UnitTests.ControllerTests
                 }
             };
 
+            var restaurantType = "Bar & Dinner";
+
             restaurantService.Setup(s => s.GetAllRestaurants()).Returns(expectedModel);
 
-            var result = controller.Restaurants() as ViewResult;
+            var result = controller.Restaurants(restaurantType) as ViewResult;
 
             Assert.IsNotNull(result);
             Assert.That(result.Model, Is.InstanceOf<IEnumerable<RestaurantsViewModel>>());

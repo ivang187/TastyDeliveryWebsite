@@ -36,11 +36,12 @@ namespace TastyDelivery.Core.Services.Common
 
         public void AddNew<T>(T entity) where T : class
         {
-            context.Add(entity);
+            GetDbSet<T>().Add(entity);
         }
 
         public void Update<T>(T entity) where T : class
         {
+
             GetDbSet<T>().Update(entity);
         }
 

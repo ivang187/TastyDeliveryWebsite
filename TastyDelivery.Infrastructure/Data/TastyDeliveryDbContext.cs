@@ -73,6 +73,11 @@ public class TastyDeliveryDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(o => o.RestaurantId)
             .IsRequired();
 
+        builder.Entity<Restaurant>()
+        .HasMany(r => r.Products)
+        .WithOne(pr => pr.Restaurant)
+        .OnDelete(DeleteBehavior.Cascade);
+
         if (_seedDb)
         {
             builder.ApplyConfiguration(new RestaurantConfiguration());

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TastyDelivery.Core.Models.DeliveryManModels;
 using TastyDelivery.Core.Models.OrderModels;
+using TastyDelivery.Infrastructure.Data.Models;
 
 namespace TastyDelivery.Core.Contracts
 {
@@ -14,7 +15,7 @@ namespace TastyDelivery.Core.Contracts
 
         public Task AssignOrderToWorker(int orderId, string userId);
 
-        public AssignedOrdersViewModel CreateAssignedOrderModel(int orderId);
+        public AssignedOrdersViewModel CreateAssignedOrderModel(int orderId, List<OrderProducts> products);
 
         public List<AssignedOrdersViewModel> GetAssignedOrders(string userId);
 
